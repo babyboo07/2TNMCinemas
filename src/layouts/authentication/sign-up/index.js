@@ -22,6 +22,8 @@ import Separator from "layouts/authentication/components/Separator";
 // Images
 import curved6 from "assets/images/curved-images/curved14.jpg";
 import { useForm } from "react-hook-form";
+import { handleRegister } from "API/authentitication/auth";
+import { VALIDATIONEMAIL } from "AppConstants";
 
 function SignUp() {
   const {
@@ -33,7 +35,15 @@ function SignUp() {
 
   const handleSetAgremment = () => setAgremment(!agreement);
 
-  const onSubmit = (data) => {
+  const validationEmail = {
+    ...register("email", {
+      required: true,
+      pattern: VALIDATIONEMAIL,
+    }),
+  };
+
+  const onSubmitSignup = (data) => {
+    handleRegister(data);
     console.log(data);
   };
 
@@ -54,25 +64,21 @@ function SignUp() {
         </SoftBox>
         <Separator />
         <SoftBox pt={2} pb={3} px={3}>
-          <SoftBox onSubmit={handleSubmit(onSubmit)} component="form" role="form">
+          <SoftBox onSubmit={handleSubmit(onSubmitSignup)} component="form" role="form">
             <SoftBox mb={2}>
-              <SoftInput id="name" placeholder="Name" {...register("name",{required:true})} />
-              {errors.name && (
+              <SoftInput
+                id="username"
+                placeholder="Username"
+                {...register("username", { required: true })}
+              />
+              {errors.username && (
                 <FormHelperText error id="component-error-text">
-                  Name is required
+                  Username is required
                 </FormHelperText>
               )}
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput
-                id="email"
-                type="email"
-                placeholder="Email"
-                {...register("email", {
-                  required: true,
-                  pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$",
-                })}
-              />
+              <SoftInput id="email" type="email" placeholder="Email" {...validationEmail} />
               {errors.email && (
                 <FormHelperText error id="component-error-text">
                   Email is required

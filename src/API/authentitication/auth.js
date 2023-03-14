@@ -9,11 +9,11 @@ const config = {
 
 const handlelogin = (data) => {
   try {
-    axios.post(URL + `/login`, data).then((res) => {
-    //   localStorage.setItem("token", res.data.access_token);
-    //   localStorage.setItem("user", JSON.stringify(res.data.users));
+    return axios.post(URL + `/login`, data).then((res) => {
+      localStorage.setItem("token", res.data.access_token);
+      // localStorage.setItem("user", JSON.stringify(res.data.users));
       console.log(res.data);
-    //   window.location.href = "/";
+      // window.location.href = "/dashboard";
       return res.data;
     });
   } catch (error) {

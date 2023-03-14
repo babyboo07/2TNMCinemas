@@ -10,7 +10,7 @@ const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
-const Createnew = () => {
+const EditMovie = () => {
   const {
     register,
     handleSubmit,
@@ -186,4 +186,4 @@ const Createnew = () => {
   );
 };
 
-export default Createnew;
+export default EditMovie;

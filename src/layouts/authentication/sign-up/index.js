@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 // @mui material components
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
+import { FormHelperText } from "@mui/material";
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
@@ -20,11 +21,21 @@ import Separator from "layouts/authentication/components/Separator";
 
 // Images
 import curved6 from "assets/images/curved-images/curved14.jpg";
+import { useForm } from "react-hook-form";
 
 function SignUp() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [agreement, setAgremment] = useState(true);
 
   const handleSetAgremment = () => setAgremment(!agreement);
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
   return (
     <BasicLayout
@@ -43,15 +54,43 @@ function SignUp() {
         </SoftBox>
         <Separator />
         <SoftBox pt={2} pb={3} px={3}>
-          <SoftBox component="form" role="form">
+          <SoftBox onSubmit={handleSubmit(onSubmit)} component="form" role="form">
             <SoftBox mb={2}>
-              <SoftInput placeholder="Name" />
+              <SoftInput id="name" placeholder="Name" {...register("name",{required:true})} />
+              {errors.name && (
+                <FormHelperText error id="component-error-text">
+                  Name is required
+                </FormHelperText>
+              )}
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="email" placeholder="Email" />
+              <SoftInput
+                id="email"
+                type="email"
+                placeholder="Email"
+                {...register("email", {
+                  required: true,
+                  pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$",
+                })}
+              />
+              {errors.email && (
+                <FormHelperText error id="component-error-text">
+                  Email is required
+                </FormHelperText>
+              )}
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="password" placeholder="Password" />
+              <SoftInput
+                id="password"
+                type="password"
+                placeholder="Password"
+                {...register("password", { required: true })}
+              />
+              {errors.password && (
+                <FormHelperText error id="component-error-text">
+                  Password is required
+                </FormHelperText>
+              )}
             </SoftBox>
             <SoftBox display="flex" alignItems="center">
               <Checkbox checked={agreement} onChange={handleSetAgremment} />
@@ -74,7 +113,7 @@ function SignUp() {
               </SoftTypography>
             </SoftBox>
             <SoftBox mt={4} mb={1}>
-              <SoftButton variant="gradient" color="dark" fullWidth>
+              <SoftButton type="submit" variant="gradient" color="dark" fullWidth>
                 sign up
               </SoftButton>
             </SoftBox>

@@ -17,11 +17,22 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import curved9 from "assets/images/curved-images/curved-6.jpg";
+import { useForm } from "react-hook-form";
+import { FormHelperText } from "@mui/material";
 
 function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
   return (
     <CoverLayout
@@ -29,14 +40,27 @@ function SignIn() {
       description="Enter your email and password to sign in"
       image={curved9}
     >
-      <SoftBox component="form" role="form">
+      <SoftBox onSubmit={handleSubmit(onSubmit)} component="form" role="form">
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
             <SoftTypography component="label" variant="caption" fontWeight="bold">
               Email
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="email" placeholder="Email" />
+          <SoftInput
+            id="email"
+            type="email"
+            placeholder="Email"
+            {...register("email", {
+              required: true,
+              pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$",
+            })}
+          />
+          {errors.email && (
+            <FormHelperText error id="component-error-text">
+              Email is required
+            </FormHelperText>
+          )}
         </SoftBox>
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
@@ -44,7 +68,17 @@ function SignIn() {
               Password
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="password" placeholder="Password" />
+          <SoftInput
+            id="password"
+            type="password"
+            placeholder="Password"
+            {...register("password", { required: true })}
+          />
+          {errors.password && (
+            <FormHelperText error id="component-error-text">
+              Password is required
+            </FormHelperText>
+          )}
         </SoftBox>
         <SoftBox display="flex" alignItems="center">
           <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -58,7 +92,7 @@ function SignIn() {
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={4} mb={1}>
-          <SoftButton variant="gradient" color="info" fullWidth>
+          <SoftButton type="submit" variant="gradient" color="info" fullWidth>
             sign in
           </SoftButton>
         </SoftBox>

@@ -44,21 +44,19 @@ function SignIn() {
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
             <SoftTypography component="label" variant="caption" fontWeight="bold">
-              Email
+              Username
             </SoftTypography>
           </SoftBox>
           <SoftInput
-            id="email"
-            type="email"
-            placeholder="Email"
-            {...register("email", {
+            id="username"
+            placeholder="Username"
+            {...register("username", {
               required: true,
-              pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$",
             })}
           />
-          {errors.email && (
+          {errors.username && (
             <FormHelperText error id="component-error-text">
-              Email is required
+              Username is required
             </FormHelperText>
           )}
         </SoftBox>

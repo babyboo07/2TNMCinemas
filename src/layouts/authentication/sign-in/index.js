@@ -19,6 +19,7 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import curved9 from "assets/images/curved-images/curved-6.jpg";
 import { useForm } from "react-hook-form";
 import { FormHelperText } from "@mui/material";
+import { handlelogin } from "API/authentitication/auth";
 
 function SignIn() {
   const {
@@ -30,17 +31,18 @@ function SignIn() {
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  const onSubmit = (data) => {
+  const onSubmitLogin = (data) => {
+    handlelogin(data);
     console.log(data);
   };
 
   return (
     <CoverLayout
       title="Welcome back"
-      description="Enter your email and password to sign in"
+      description="Enter your username and password to sign in"
       image={curved9}
     >
-      <SoftBox onSubmit={handleSubmit(onSubmit)} component="form" role="form">
+      <SoftBox onSubmit={handleSubmit(onSubmitLogin)} component="form" role="form">
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
             <SoftTypography component="label" variant="caption" fontWeight="bold">

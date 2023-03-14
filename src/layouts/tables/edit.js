@@ -174,7 +174,7 @@ const EditMovie = () => {
               </div>
               <SoftBox mt={4} mb={1}>
                 <SoftButton type="submit" variant="gradient" color="info">
-                  Create
+                  Save
                 </SoftButton>
               </SoftBox>
             </SoftBox>

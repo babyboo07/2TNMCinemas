@@ -30,6 +30,8 @@ import brand from "assets/images/logo-ct.png";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import Createnew from "layouts/tables/create";
+import EditMovie from "layouts/tables/edit";
+import DetailMovie from "layouts/tables/detail";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -133,6 +135,8 @@ export default function App() {
         <Route path="/authentication/sign-in" element={<SignIn />} />
         <Route path="/authentication/sign-up" element={<SignUp />} />
         <Route path="/tables/create" element={<Createnew />} />
+        <Route path="tables/edit" element={<EditMovie />} />
+        <Route path="tables/detail" element={<DetailMovie />} />
       </Routes>
     </ThemeProvider>
   );

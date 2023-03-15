@@ -49,6 +49,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+  const [userInfo, setUserInfo] = useState([]);
+  const [isOpen, setOpen] = useState(false);
 
   useEffect(() => {
     // Setting the navbar type
@@ -56,6 +58,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
       setNavbarType("sticky");
     } else {
       setNavbarType("static");
+    }
+
+    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
+    if (user) {
+      const dataUser = JSON.parse(user);
+      setUserInfo(dataUser);
     }
 
     // A function that sets the transparent state of the navbar.
@@ -75,6 +83,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     // Remove event listener on cleanup
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
+  console.log(userInfo);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
@@ -138,56 +147,109 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 icon={{ component: "search", direction: "left" }}
               />
             </SoftBox>
-            <SoftBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in">
-                <IconButton sx={navbarIconButton} size="small">
-                  <Icon
-                    sx={({ palette: { dark, white } }) => ({
-                      color: light ? white.main : dark.main,
-                    })}
+            {userInfo !== null ? (
+              <div className="relative inline-block text-left">
+                <div>
+                  <button
+                    type="button"
+                    className="inline-flex justify-center w-full shadow-sm px-4 py-2 text-sm font-medium text-gray-700 outline-none "
+                    id="menu-button"
+                    aria-expanded="true"
+                    aria-haspopup="true"
+                    onClick={(e) => setOpen(!isOpen)}
                   >
-                    account_circle
+                    {userInfo?.fullName}
+                    <svg
+                      className="-mr-1 ml-2 h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                {isOpen ? (
+                  <div
+                    className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="menu-button"
+                    tabindex="-1"
+                  >
+                    <div className="py-1" role="none">
+                      <form method="POST" action="#" role="none">
+                        <button
+                          type="submit"
+                          className="text-gray-700 block w-full text-left px-4 py-2 text-sm"
+                          role="menuitem"
+                          tabindex="-1"
+                          id="menu-item-3"
+                        >
+                          Sign out
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <SoftBox color={light ? "white" : "inherit"}>
+                <Link to="/authentication/sign-in">
+                  <IconButton sx={navbarIconButton} size="small">
+                    <Icon
+                      sx={({ palette: { dark, white } }) => ({
+                        color: light ? white.main : dark.main,
+                      })}
+                    >
+                      account_circle
+                    </Icon>
+                    <SoftTypography
+                      variant="button"
+                      fontWeight="medium"
+                      color={light ? "white" : "dark"}
+                    >
+                      Sign in
+                    </SoftTypography>
+                  </IconButton>
+                </Link>
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  sx={navbarMobileMenu}
+                  onClick={handleMiniSidenav}
+                >
+                  <Icon className={light ? "text-white" : "text-dark"}>
+                    {miniSidenav ? "menu_open" : "menu"}
                   </Icon>
-                  <SoftTypography
-                    variant="button"
-                    fontWeight="medium"
-                    color={light ? "white" : "dark"}
-                  >
-                    Sign in
-                  </SoftTypography>
                 </IconButton>
-              </Link>
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarMobileMenu}
-                onClick={handleMiniSidenav}
-              >
-                <Icon className={light ? "text-white" : "text-dark"}>
-                  {miniSidenav ? "menu_open" : "menu"}
-                </Icon>
-              </IconButton>
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
-              >
-                <Icon>settings</Icon>
-              </IconButton>
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleOpenMenu}
-              >
-                <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
-              </IconButton>
-              {renderMenu()}
-            </SoftBox>
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  sx={navbarIconButton}
+                  onClick={handleConfiguratorOpen}
+                >
+                  <Icon>settings</Icon>
+                </IconButton>
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  sx={navbarIconButton}
+                  aria-controls="notification-menu"
+                  aria-haspopup="true"
+                  variant="contained"
+                  onClick={handleOpenMenu}
+                >
+                  <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
+                </IconButton>
+                {renderMenu()}
+              </SoftBox>
+            )}
           </SoftBox>
         )}
       </Toolbar>

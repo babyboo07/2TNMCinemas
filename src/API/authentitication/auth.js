@@ -12,7 +12,7 @@ const handlelogin = (data) => {
     return axios.post(URL + `/login`, data).then((res) => {
       localStorage.setItem("token", res.data.access_token);
       localStorage.setItem("user", JSON.stringify(res.data.userInfo));
-      console.log(res.data);
+      // console.log(res.data);
       window.location.href = "/dashboard";
       return res.data;
     });

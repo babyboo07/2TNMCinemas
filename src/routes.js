@@ -29,6 +29,7 @@ import Profile from "layouts/profile";
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
 import CustomerSupport from "examples/Icons/CustomerSupport";
+import TablesUser from "layouts/member";
 
 const routes = [
   {
@@ -47,6 +48,15 @@ const routes = [
     route: "/tables",
     icon: <Office size="12px" />,
     component: <Tables />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Member",
+    key: "member",
+    route: "/member",
+    icon: <Office size="12px" />,
+    component: <TablesUser />,
     noCollapse: true,
   },
   { type: "title", title: "Account Pages", key: "account-pages" },

@@ -32,8 +32,10 @@ function SignIn() {
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   const onSubmitLogin = (data) => {
-    handlelogin(data);
-    console.log(data);
+    var form_data = new FormData();
+    form_data.append("username", data.username);
+    form_data.append("password", data.password);
+    handlelogin(form_data);
   };
 
   return (

@@ -13,7 +13,6 @@ import Footer from "examples/Footer";
 // Data
 import SoftButton from "components/SoftButton";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { listUser } from "API/member/user";
 
@@ -28,18 +27,6 @@ function TablesUser() {
     const list = await listUser();
     setListMember(list);
   };
-=======
-import userTableData from "./data/userTablesDate";
-import { useEffect, useState } from "react";
-
-function TablesUser(prop) {
-  const { columns, rows } = userTableData;
-  const [listMenber, setListMember]= useState();
-
-  useEffect(()=>{
-
-  },[])
->>>>>>> 7977df946177571bd9e432383a2cf436e27b7706
 
   return (
     <DashboardLayout>
@@ -109,7 +96,6 @@ function TablesUser(prop) {
                           )}
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              
                               <div
                                 data-te-chip-init
                                 data-te-ripple-init

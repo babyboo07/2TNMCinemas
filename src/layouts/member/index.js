@@ -15,9 +15,15 @@ import Table from "examples/Tables/Table";
 import SoftButton from "components/SoftButton";
 import { Link } from "react-router-dom";
 import userTableData from "./data/userTablesDate";
+import { useEffect, useState } from "react";
 
-function TablesUser() {
+function TablesUser(prop) {
   const { columns, rows } = userTableData;
+  const [listMenber, setListMember]= useState();
+
+  useEffect(()=>{
+
+  },[])
 
   return (
     <DashboardLayout>

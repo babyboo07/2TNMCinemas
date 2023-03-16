@@ -30,6 +30,7 @@ import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import TablesUser from "layouts/member";
+import TablesCategory from "layouts/dashboard/category";
 
 const routes = [
   {
@@ -57,6 +58,15 @@ const routes = [
     route: "/member",
     icon: <Office size="12px" />,
     component: <TablesUser />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Category",
+    key: "category",
+    route: "/category",
+    icon: <Office size="12px" />,
+    component: <TablesCategory />,
     noCollapse: true,
   },
   { type: "title", title: "Account Pages", key: "account-pages" },

@@ -40,7 +40,8 @@
     "stylis": "4.1.1",
     "stylis-plugin-rtl": "2.1.1",
     "uuid": "8.3.2",
-    "web-vitals": "2.1.4"
+    "web-vitals": "2.1.4",
+    "font-awesome": "^4.7.0"
   },
   "scripts": {
     "start": "react-scripts start",

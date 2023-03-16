@@ -10,12 +10,12 @@ const config = {
 const listUser = () => {
   try {
     return axios.get(URL + `/admin/users`, config).then((res) => {
-      console.log(res.data);
       return res.data;
     });
   } catch (error) {
     console.log(error);
   }
 };
+
 
 export { listUser };

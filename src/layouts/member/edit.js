@@ -1,5 +1,4 @@
 import { Card, FormHelperText } from "@mui/material";
-import { createUser } from "API/member/user";
 import { VALIDATIONEMAIL } from "AppConstants";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
@@ -11,7 +10,7 @@ const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
-const CreateUser = () => {
+const EditUser = () => {
   const {
     register,
     handleSubmit,
@@ -25,8 +24,8 @@ const CreateUser = () => {
     }),
   };
 
-  const onSubmitNewUser = (data) => {
-    createUser(data);
+  const onSubmit = (data) => {
+    // createUser(data);
     console.log(data);
   };
   return (
@@ -35,7 +34,7 @@ const CreateUser = () => {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
-            <SoftBox onSubmit={handleSubmit(onSubmitNewUser)} component="form" role="form" p={2}>
+            <SoftBox onSubmit={handleSubmit(onSubmit)} component="form" role="form" p={2}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <SoftBox mb={2}>
@@ -62,11 +61,11 @@ const CreateUser = () => {
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
-                      id="fullName"
+                      id="fullname"
                       placeholder="Fullname"
-                      {...register("fullName", { required: true })}
+                      {...register("fullname", { required: true })}
                     />
-                    {errors.fullName && (
+                    {errors.fullname && (
                       <FormHelperText error id="component-error-text">
                         Fullname is required
                       </FormHelperText>
@@ -85,8 +84,8 @@ const CreateUser = () => {
                           {...register("gender", { required: true })}
                         >
                           <option value="">Select...</option>
-                          <option value={1}>Male</option>
-                          <option value={2}>Female</option>
+                          <option value="1">Male</option>
+                          <option value="2">Female</option>
                         </select>
                         {errors.gender && (
                           <FormHelperText error id="component-error-text">
@@ -102,12 +101,8 @@ const CreateUser = () => {
                             Birthday
                           </SoftTypography>
                         </SoftBox>
-                        <SoftInput
-                          id="dateOfBirth"
-                          type="date"
-                          {...register("dateOfBirth", { required: true })}
-                        />
-                        {errors.dateOfBirth && (
+                        <SoftInput id="dob" type="date" {...register("dob", { required: true })} />
+                        {errors.dob && (
                           <FormHelperText error id="component-error-text">
                             Day of birth is required
                           </FormHelperText>
@@ -133,24 +128,6 @@ const CreateUser = () => {
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
                       <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Password
-                      </SoftTypography>
-                    </SoftBox>
-                    <SoftInput
-                      id="password"
-                      type={"password"}
-                      placeholder="Password"
-                      {...register("password", { required: true })}
-                    />
-                    {errors.password && (
-                      <FormHelperText error id="component-error-text">
-                        Password is required
-                      </FormHelperText>
-                    )}
-                  </SoftBox>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
                         Address
                       </SoftTypography>
                     </SoftBox>
@@ -172,11 +149,11 @@ const CreateUser = () => {
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
-                      id="phoneNumber"
+                      id="phonenumber"
                       placeholder="Phone number"
-                      {...register("phoneNumber", { required: true })}
+                      {...register("phonenumber", { required: true })}
                     />
-                    {errors.phoneNumber && (
+                    {errors.phonenumber && (
                       <FormHelperText error id="component-error-text">
                         Phone Number is required
                       </FormHelperText>
@@ -198,4 +175,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default EditUser;

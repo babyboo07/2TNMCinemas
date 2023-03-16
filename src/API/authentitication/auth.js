@@ -23,7 +23,6 @@ const handlelogin = (data) => {
 const handleRegister = (data) => {
   try {
     axios.post(URL + `/register`, data).then((res) => {
-      console.log(res.data);
       window.location.href = "/authentication/sign-in";
       return res.data;
     });

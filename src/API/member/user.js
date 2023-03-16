@@ -17,5 +17,26 @@ const listUser = () => {
   }
 };
 
+const createUser = async (data) => {
+  try {
+    return await axios.post(URL + `/register`, data).then((res) => {
+      window.location.href = "/member";
+      return res.data;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export { listUser };
+const editUser = async (data) => {
+  try {
+    return await axios.post(URL + `/admin/user/update`, data).then((res) => {
+      window.location.href = "/member";
+      return res.data;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { listUser, createUser, editUser };

@@ -33,6 +33,7 @@ import Createnew from "layouts/tables/create";
 import EditMovie from "layouts/tables/edit";
 import DetailMovie from "layouts/tables/detail";
 import CreateUser from "layouts/member/create";
+import EditUser from "layouts/member/edit";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -138,7 +139,8 @@ export default function App() {
         <Route path="/tables/create" element={<Createnew />} />
         <Route path="tables/edit" element={<EditMovie />} />
         <Route path="tables/detail" element={<DetailMovie />} />
-        <Route path="member/create" element={<CreateUser />} />
+        <Route path="/member/create" element={<CreateUser />} />
+        <Route path="/member/edit/:userId" element={<EditUser />} />
       </Routes>
     </ThemeProvider>
   );

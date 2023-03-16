@@ -42,6 +42,7 @@ import {
 // Images
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
+import { handleLogout } from "API/authentitication/auth";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -83,7 +84,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
     // Remove event listener on cleanup
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
-  console.log(userInfo);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
@@ -129,6 +129,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
     </Menu>
   );
 
+  const onLogout = () => {
+    handleLogout();
+  };
+
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -147,7 +151,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 icon={{ component: "search", direction: "left" }}
               />
             </SoftBox>
-            {userInfo !== null ? (
+            {userInfo !== null && userInfo !== undefined ? (
               <div className="relative inline-block text-left">
                 <div>
                   <button
@@ -183,7 +187,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     tabindex="-1"
                   >
                     <div className="py-1" role="none">
-                      <form method="POST" action="#" role="none">
+                      <form onSubmit={onLogout()} method="POST" action="#" role="none">
                         <button
                           type="submit"
                           className="text-gray-700 block w-full text-left px-4 py-2 text-sm"

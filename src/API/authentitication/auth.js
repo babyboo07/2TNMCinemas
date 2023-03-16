@@ -24,7 +24,7 @@ const handleRegister = (data) => {
   try {
     axios.post(URL + `/register`, data).then((res) => {
       console.log(res.data);
-      window.location.href = "/authentication/login";
+      window.location.href = "/authentication/sign-in";
       return res.data;
     });
   } catch (error) {
@@ -37,7 +37,7 @@ const handleLogout = () => {
     axios.get(URL + `/logout`, config).then((res) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      window.location.href = "/login";
+      window.location.href = "/authentication/sign-in";
       return res.data;
     });
   } catch (error) {

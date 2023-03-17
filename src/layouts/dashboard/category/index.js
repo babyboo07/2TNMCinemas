@@ -36,7 +36,7 @@ export default function TablesCategory() {
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
               <SoftTypography variant="h6">Category Table</SoftTypography>
-              <Link to={"/member/create"}>
+              <Link to={"/category/create"}>
                 <SoftButton variant="gradient" color="info">
                   Create New
                 </SoftButton>
@@ -82,24 +82,26 @@ export default function TablesCategory() {
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               <div
-                                data-te-chip-init
-                                data-te-ripple-init
                                 className={`${
-                                  cate.status === 1
-                                    ? " bg-green-300 text-zinc-50"
-                                    : " bg-gray-300 green-800"
-                                }${"[word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"}`}
-                                data-te-close="true"
+                                  cate.status === 1 ? "text-green-500" : "text-neutral-500"
+                                }` }
                               >
-                                {cate.status === 2 ? "Working" : "Off"}
+                                {cate.status === 1 ? "WORKING" : "OFF"}
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">{cate.createByUserEmail}</td>
                           <td className="px-6 py-4">
-                            <Link to="#" className="font-medium text-blue-600  hover:underline">
-                              Edit Category
-                            </Link>
+                            <div className="flex items-center">
+                              <div
+                                data-te-chip-init
+                                data-te-ripple-init
+                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                data-te-close="true"
+                              >
+                                <Link to={"/category/edit/" + cate.categoryId}>UPDATE</Link>
+                              </div>
+                            </div>
                           </td>
                         </tr>
                       ))}

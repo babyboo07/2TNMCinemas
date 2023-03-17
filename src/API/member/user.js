@@ -28,9 +28,19 @@ const createUser = async (data) => {
   }
 };
 
+const userInfo = (userId) => {
+  try {
+    return axios.get(URL + `/admin/user/` + userId, config).then((res) => {
+      return res.data;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const editUser = async (data) => {
   try {
-    return await axios.post(URL + `/admin/user/update`, data).then((res) => {
+    return await axios.post(URL + `/admin/user/update`, data, config).then((res) => {
       window.location.href = "/member";
       return res.data;
     });
@@ -39,4 +49,4 @@ const editUser = async (data) => {
   }
 };
 
-export { listUser, createUser, editUser };
+export { listUser, createUser, editUser, userInfo };

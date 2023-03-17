@@ -1,21 +1,38 @@
 import { Card, FormHelperText } from "@mui/material";
+import { userInfo } from "API/member/user";
+import { editUser } from "API/member/user";
 import { VALIDATIONEMAIL } from "AppConstants";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
 const EditUser = () => {
+  const userId = useParams();
+  const [username, setUsername] = useState();
+  const [fullName, setFullName] = useState();
+  const [email, setEmail] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
+  const [address, setAddress] = useState();
+  const [gender, setGender] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const validationEmail = {
     ...register("email", {
@@ -25,9 +42,23 @@ const EditUser = () => {
   };
 
   const onSubmit = (data) => {
-    // createUser(data);
+    data.username = username;
+    data["userId"] = userId.userId;
     console.log(data);
+    editUser(data);
   };
+
+  const fetchData = async () => {
+    const user = await userInfo(userId.userId);
+    setUsername(user.userName);
+    setEmail(user.email);
+    setPhoneNumber(user.phoneNumber);
+    setAddress(user.address);
+    setGender(user.gender);
+    setDateOfBirth(user.dateOfBirth);
+    setFullName(user.fullName);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -43,16 +74,12 @@ const EditUser = () => {
                         Username
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput
+                    <input
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
+                      value={username}
                       id="username"
                       placeholder="Username"
-                      {...register("username", { required: true })}
                     />
-                    {errors.username && (
-                      <FormHelperText error id="component-error-text">
-                        Username is required
-                      </FormHelperText>
-                    )}
                   </SoftBox>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
@@ -60,12 +87,15 @@ const EditUser = () => {
                         Fullname
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput
-                      id="fullname"
+                    <input
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
+                      id="fullName"
+                      value={fullName}
                       placeholder="Fullname"
-                      {...register("fullname", { required: true })}
+                      {...register("fullName", { required: true })}
+                      onChange={(e) => setFullName(e.target.value)}
                     />
-                    {errors.fullname && (
+                    {errors.fullName && (
                       <FormHelperText error id="component-error-text">
                         Fullname is required
                       </FormHelperText>
@@ -82,10 +112,12 @@ const EditUser = () => {
                         <select
                           className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                           {...register("gender", { required: true })}
+                          value={gender}
+                          onChange={(e) => setGender(e.target.value)}
                         >
                           <option value="">Select...</option>
-                          <option value="1">Male</option>
-                          <option value="2">Female</option>
+                          <option value={1}>Male</option>
+                          <option value={2}>Female</option>
                         </select>
                         {errors.gender && (
                           <FormHelperText error id="component-error-text">
@@ -101,8 +133,15 @@ const EditUser = () => {
                             Birthday
                           </SoftTypography>
                         </SoftBox>
-                        <SoftInput id="dob" type="date" {...register("dob", { required: true })} />
-                        {errors.dob && (
+                        <input
+                          className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
+                          id="dateOfBirth"
+                          type="date"
+                          {...register("dateOfBirth", { required: true })}
+                          value={dateOfBirth}
+                          onChange={(e) => setDateOfBirth(e.target.value)}
+                        />
+                        {errors.dateOfBirth && (
                           <FormHelperText error id="component-error-text">
                             Day of birth is required
                           </FormHelperText>
@@ -115,7 +154,14 @@ const EditUser = () => {
                       <SoftTypography component="label" variant="caption" fontWeight="bold">
                         Email
                       </SoftTypography>
-                      <SoftInput id="email" placeholder="Email" {...validationEmail} />
+                      <input
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
+                        id="email"
+                        placeholder="Email"
+                        {...validationEmail}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                       {errors.email && (
                         <FormHelperText error id="component-error-text">
                           Email is required
@@ -131,10 +177,13 @@ const EditUser = () => {
                         Address
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput
+                    <input
                       id="address"
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
                       placeholder="Address"
                       {...register("address", { required: true })}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
                     />
                     {errors.address && (
                       <FormHelperText error id="component-error-text">
@@ -149,11 +198,14 @@ const EditUser = () => {
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
-                      id="phonenumber"
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
+                      id="phoneNumber"
                       placeholder="Phone number"
-                      {...register("phonenumber", { required: true })}
+                      {...register("phoneNumber", { required: true })}
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                     />
-                    {errors.phonenumber && (
+                    {errors.phoneNumber && (
                       <FormHelperText error id="component-error-text">
                         Phone Number is required
                       </FormHelperText>
@@ -163,7 +215,7 @@ const EditUser = () => {
               </div>
               <SoftBox mt={4} mb={1}>
                 <SoftButton type="submit" variant="gradient" color="info">
-                  Create
+                  Save
                 </SoftButton>
               </SoftBox>
             </SoftBox>

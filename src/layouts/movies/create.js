@@ -1,5 +1,7 @@
 import { Card, FormHelperText } from "@mui/material";
+import { listCast } from "API/cast/cast";
 import { ListCategory } from "API/category/category";
+import { listDirector } from "API/director/director";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
@@ -7,13 +9,7 @@ import SoftTypography from "components/SoftTypography";
 import { CustomListCategory } from "layouts/utils/GetData";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Select, {
-  components,
-  MultiValueGenericProps,
-  MultiValueProps,
-  OnChangeValue,
-  Props,
-} from 'react-select';
+import Select from "react-select";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -21,6 +17,9 @@ const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar")
 
 const Createnew = () => {
   const [lstCategory, setListCategory] = useState([]);
+  const [lstDirector, setLstDirector] = useState([]);
+  const [lstCast, setLstCast] = useState([]);
+  const [videoID, setVideoID] = useState("");
   const {
     register,
     handleSubmit,
@@ -40,12 +39,25 @@ const Createnew = () => {
     const customList = CustomListCategory(list);
     setListCategory(customList);
 
-    console.log(list);
+    const listDir = await listDirector();
+    setLstDirector(listDir);
+
+    const castList = await listCast();
+    setLstDirector(castList);
   };
 
-  const onChange = (selectedOptions: OnChangeValue<lstCategory, true>) => {
-    console.log(selectedOptions)
-  }
+  const onChangeCategory = (selectedOptions) => {
+    console.log(selectedOptions);
+  };
+  const onChangeDirector = (selectedOptions) => {
+    console.log(selectedOptions);
+  };
+  const onChangeCast = (selectedOptions) => {
+    console.log(selectedOptions);
+  };
+  const handleChange = (e) => {
+    setVideoID(e.target.value.substring(e.target.value.search("=") + 1, e.target.value.length));
+  };
 
   return (
     <DashboardLayout>
@@ -103,7 +115,13 @@ const Createnew = () => {
                       <SoftTypography component="label" variant="caption" fontWeight="bold">
                         Trailers
                       </SoftTypography>
-                      <SoftInput id="trailers" placeholder="Link youtube" />
+                      <input
+                        onChange={handleChange}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                        id="trailers"
+                        placeholder="Link youtube"
+                        {...register("trailers")}
+                      />
                     </SoftBox>
                   </SoftBox>
                 </div>
@@ -114,14 +132,14 @@ const Createnew = () => {
                         Director
                       </SoftTypography>
                     </SoftBox>
-                    <select
+                    <Select
                       {...register("director")}
-                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                    >
-                      <option value="">Select...</option>
-                      <option value="A">Category A</option>
-                      <option value="B">Category B</option>
-                    </select>
+                      id="director"
+                      className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full"
+                      options={lstCategory}
+                      classNamePrefix="select"
+                      onChange={onChangeDirector}
+                    />
                   </SoftBox>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
@@ -135,7 +153,7 @@ const Createnew = () => {
                       name="category"
                       options={lstCategory}
                       classNamePrefix="select"
-                      onChange={onChange}
+                      onChange={onChangeCategory}
                       // {...register("category")}
                     />
                   </SoftBox>
@@ -152,8 +170,8 @@ const Createnew = () => {
                           {...register("hot")}
                         >
                           <option value="">Select...</option>
-                          <option value="A">Hot</option>
-                          <option value="B">Category B</option>
+                          <option value="1">Hot</option>
+                          <option value="0">Normal</option>
                         </select>
                       </SoftBox>
                     </div>
@@ -164,14 +182,15 @@ const Createnew = () => {
                             Cast
                           </SoftTypography>
                         </SoftBox>
-                        <select
-                          className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                        <Select
+                          className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full"
                           {...register("cast")}
-                        >
-                          <option value="">Select...</option>
-                          <option value="A">Hot</option>
-                          <option value="B">Category B</option>
-                        </select>
+                          name="cast"
+                          isMulti
+                          options={lstCategory}
+                          classNamePrefix="select"
+                          onChange={onChangeCast}
+                        />
                       </SoftBox>
                     </div>
                   </div>

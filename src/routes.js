@@ -31,6 +31,8 @@ import CustomerSupport from "examples/Icons/CustomerSupport";
 import TablesUser from "layouts/member";
 import TablesCategory from "layouts/category";
 import Tables from "layouts/movies";
+import TablesCast from "layouts/cast";
+import TablesDirector from "layouts/director";
 
 const routes = [
   {
@@ -67,6 +69,24 @@ const routes = [
     route: "/category",
     icon: <Office size="12px" />,
     component: <TablesCategory />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Cast",
+    key: "cast",
+    route: "/cast",
+    icon: <Office size="12px" />,
+    component: <TablesCast />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Director",
+    key: "director",
+    route: "/director",
+    icon: <Office size="12px" />,
+    component: <TablesDirector />,
     noCollapse: true,
   },
   // { type: "title", title: "Account Pages", key: "account-pages" },

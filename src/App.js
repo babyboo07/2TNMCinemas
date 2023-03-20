@@ -36,7 +36,8 @@ import UpdateCategory from "layouts/category/update";
 import Createnew from "layouts/movies/create";
 import EditMovie from "layouts/movies/edit";
 import DetailMovie from "layouts/movies/detail";
-
+import CreateCast from "layouts/cast/create";
+import UpdateCast from "layouts/cast/edit";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -146,6 +147,8 @@ export default function App() {
         <Route path="/member/edit/:userId" element={<EditUser />} />
         <Route path="/category/create" element={<CreateCategory />} />
         <Route path="/category/edit/:cateId" element={<UpdateCategory />} />
+        <Route path="/cast/create" element={<CreateCast />} />
+        <Route path="/cast/edit/:castId" element={<UpdateCast />} />
       </Routes>
     </ThemeProvider>
   );

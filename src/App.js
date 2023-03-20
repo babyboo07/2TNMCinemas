@@ -140,8 +140,8 @@ export default function App() {
         <Route path="/authentication/sign-in" element={<SignIn />} />
         <Route path="/authentication/sign-up" element={<SignUp />} />
         <Route path="/movies/create" element={<Createnew />} />
-        <Route path="movies/edit" element={<EditMovie />} />
-        <Route path="movies/detail" element={<DetailMovie />} />
+        <Route path="/movies/edit" element={<EditMovie />} />
+        <Route path="/movies/detail" element={<DetailMovie />} />
         <Route path="/member/create" element={<CreateUser />} />
         <Route path="/member/edit/:userId" element={<EditUser />} />
         <Route path="/category/create" element={<CreateCategory />} />

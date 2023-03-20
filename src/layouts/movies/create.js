@@ -1,16 +1,19 @@
 import { Card, FormHelperText } from "@mui/material";
+import { ListCategory } from "API/category/category";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Select from "react-select";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
 const Createnew = () => {
+  const [lstCategory, setListCategory] = useState([]);
   const {
     register,
     handleSubmit,
@@ -20,6 +23,21 @@ const Createnew = () => {
   const onSubmit = (data) => {
     console.log(data);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const list = await ListCategory();
+    setListCategory(list);
+    console.log(list);
+  };
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
 
   return (
     <DashboardLayout>
@@ -89,8 +107,8 @@ const Createnew = () => {
                       </SoftTypography>
                     </SoftBox>
                     <select
-                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                       {...register("category")}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                     >
                       <option value="">Select...</option>
                       <option value="A">Category A</option>
@@ -103,14 +121,14 @@ const Createnew = () => {
                         Category
                       </SoftTypography>
                     </SoftBox>
-                    <select
-                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                    <Select
+                      className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full "
+                      isMulti
+                      name="category"
+                      options={options}
+                      classNamePrefix="select"
                       {...register("category")}
-                    >
-                      <option value="">Select...</option>
-                      <option value="A">Category A</option>
-                      <option value="B">Category B</option>
-                    </select>
+                    />
                   </SoftBox>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
@@ -122,7 +140,7 @@ const Createnew = () => {
                         </SoftBox>
                         <select
                           className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                          {...register("category")}
+                          {...register("hot")}
                         >
                           <option value="">Select...</option>
                           <option value="A">Hot</option>
@@ -139,7 +157,7 @@ const Createnew = () => {
                         </SoftBox>
                         <select
                           className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                          {...register("category")}
+                          {...register("cast")}
                         >
                           <option value="">Select...</option>
                           <option value="A">Hot</option>

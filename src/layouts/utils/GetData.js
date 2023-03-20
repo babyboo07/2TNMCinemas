@@ -6,3 +6,12 @@ export const CustomListCategory = (cates) => {
 
   return lstCateCustom;
 };
+
+export const CustomListCast = (casts) => {
+  const lstCastCustom = casts.map((x) => ({
+    value: x.castId,
+    label: x.castName,
+  }));
+
+  return lstCastCustom;
+};

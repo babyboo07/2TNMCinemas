@@ -6,6 +6,7 @@ import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
+import { CustomListCast } from "layouts/utils/GetData";
 import { CustomListCategory } from "layouts/utils/GetData";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,7 +20,10 @@ const Createnew = () => {
   const [lstCategory, setListCategory] = useState([]);
   const [lstDirector, setLstDirector] = useState([]);
   const [lstCast, setLstCast] = useState([]);
-  const [videoID, setVideoID] = useState("");
+  const [videoID, setVideoID] = useState();
+  const [listCate, setListCate] = useState([]);
+  const [listcast, setListCast] = useState([]);
+
   const {
     register,
     handleSubmit,
@@ -27,6 +31,10 @@ const Createnew = () => {
   } = useForm();
 
   const onSubmit = (data) => {
+    data.trailers = videoID;
+    data.cast = listcast;
+    data.movieCate = listCate;
+    console.log(videoID);
     console.log(data);
   };
 
@@ -43,16 +51,17 @@ const Createnew = () => {
     setLstDirector(listDir);
 
     const castList = await listCast();
-    setLstDirector(castList);
+    const customlistCast = CustomListCast(castList);
+    setLstCast(customlistCast);
   };
 
   const onChangeCategory = (selectedOptions) => {
+    setListCate(selectedOptions);
     console.log(selectedOptions);
   };
-  const onChangeDirector = (selectedOptions) => {
-    console.log(selectedOptions);
-  };
+
   const onChangeCast = (selectedOptions) => {
+    setListCast(selectedOptions);
     console.log(selectedOptions);
   };
   const handleChange = (e) => {
@@ -108,7 +117,7 @@ const Createnew = () => {
                         Thumnail
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput id="thumnail" type="file" />
+                    <SoftInput id="thumnail" type="file" {...register("thumnail")} />
                   </SoftBox>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
@@ -116,12 +125,31 @@ const Createnew = () => {
                         Trailers
                       </SoftTypography>
                       <input
+                        type="text"
                         onChange={handleChange}
                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                         id="trailers"
                         placeholder="Link youtube"
-                        {...register("trailers")}
                       />
+                    </SoftBox>
+                  </SoftBox>
+                  <SoftBox mb={2}>
+                    <SoftBox mb={1} ml={0.5}>
+                      <SoftTypography component="label" variant="caption" fontWeight="bold">
+                        Rated
+                      </SoftTypography>
+                      <input
+                        type="text"
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                        id="rated"
+                        placeholder="Rated"
+                        {...register("rated", { required: true })}
+                      />
+                      {errors.rated && (
+                        <FormHelperText error id="component-error-text">
+                          Rated is required
+                        </FormHelperText>
+                      )}
                     </SoftBox>
                   </SoftBox>
                 </div>
@@ -132,14 +160,24 @@ const Createnew = () => {
                         Director
                       </SoftTypography>
                     </SoftBox>
-                    <Select
-                      {...register("director")}
+                    <select
                       id="director"
-                      className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full"
-                      options={lstCategory}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
                       classNamePrefix="select"
-                      onChange={onChangeDirector}
-                    />
+                      {...register("director", { required: true })}
+                    >
+                      {lstDirector.length > 0 &&
+                        lstDirector.map((d) => (
+                          <option key={d.directorId} value={d.directorId}>
+                            {d.directorName}
+                          </option>
+                        ))}
+                    </select>
+                    {errors.director && (
+                      <FormHelperText error id="component-error-text">
+                        Director is required
+                      </FormHelperText>
+                    )}
                   </SoftBox>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
@@ -154,7 +192,6 @@ const Createnew = () => {
                       options={lstCategory}
                       classNamePrefix="select"
                       onChange={onChangeCategory}
-                      // {...register("category")}
                     />
                   </SoftBox>
                   <div className="grid grid-cols-2 gap-2">
@@ -184,10 +221,9 @@ const Createnew = () => {
                         </SoftBox>
                         <Select
                           className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full"
-                          {...register("cast")}
                           name="cast"
                           isMulti
-                          options={lstCategory}
+                          options={lstCast}
                           classNamePrefix="select"
                           onChange={onChangeCast}
                         />
@@ -202,7 +238,16 @@ const Createnew = () => {
                             Running Time
                           </SoftTypography>
                         </SoftBox>
-                        <SoftInput id="runningTime" placeholder="Running Time" />
+                        <SoftInput
+                          id="runningTime"
+                          placeholder="Running Time"
+                          {...register("runningTime", { required: true })}
+                        />
+                        {errors.runningTime && (
+                          <FormHelperText error id="component-error-text">
+                            Running Time is required
+                          </FormHelperText>
+                        )}
                       </SoftBox>
                     </div>
                     <div>
@@ -212,7 +257,7 @@ const Createnew = () => {
                             Release Date
                           </SoftTypography>
                         </SoftBox>
-                        <SoftInput type="date" id="releaseDate" />
+                        <SoftInput type="date" id="releaseDate" {...register("releaseDate")} />
                       </SoftBox>
                     </div>
                   </div>

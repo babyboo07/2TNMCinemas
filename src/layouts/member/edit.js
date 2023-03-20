@@ -130,7 +130,7 @@ const EditUser = () => {
                       <SoftBox mb={2}>
                         <SoftBox mb={1} ml={0.5}>
                           <SoftTypography component="label" variant="caption" fontWeight="bold">
-                            Birthday
+                            Date Of Birth
                           </SoftTypography>
                         </SoftBox>
                         <input

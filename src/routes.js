@@ -22,7 +22,6 @@
 
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
 import Profile from "layouts/profile";
 
 // Soft UI Dashboard React icons
@@ -30,7 +29,8 @@ import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import TablesUser from "layouts/member";
-import TablesCategory from "layouts/dashboard/category";
+import TablesCategory from "layouts/category";
+import Tables from "layouts/movies";
 
 const routes = [
   {
@@ -44,9 +44,9 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Tables",
-    key: "tables",
-    route: "/tables",
+    name: "Movies",
+    key: "Movies",
+    route: "/movies",
     icon: <Office size="12px" />,
     component: <Tables />,
     noCollapse: true,

@@ -29,13 +29,14 @@ import { useSoftUIController, setMiniSidenav } from "context";
 import brand from "assets/images/logo-ct.png";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-import Createnew from "layouts/tables/create";
-import EditMovie from "layouts/tables/edit";
-import DetailMovie from "layouts/tables/detail";
 import CreateUser from "layouts/member/create";
 import EditUser from "layouts/member/edit";
-import CreateCategory from "layouts/dashboard/category/create";
-import UpdateCategory from "layouts/dashboard/category/update";
+import CreateCategory from "layouts/category/create";
+import UpdateCategory from "layouts/category/update";
+import Createnew from "layouts/movies/create";
+import EditMovie from "layouts/movies/edit";
+import DetailMovie from "layouts/movies/detail";
+
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -138,9 +139,9 @@ export default function App() {
         <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
         <Route path="/authentication/sign-in" element={<SignIn />} />
         <Route path="/authentication/sign-up" element={<SignUp />} />
-        <Route path="/tables/create" element={<Createnew />} />
-        <Route path="tables/edit" element={<EditMovie />} />
-        <Route path="tables/detail" element={<DetailMovie />} />
+        <Route path="/movies/create" element={<Createnew />} />
+        <Route path="movies/edit" element={<EditMovie />} />
+        <Route path="movies/detail" element={<DetailMovie />} />
         <Route path="/member/create" element={<CreateUser />} />
         <Route path="/member/edit/:userId" element={<EditUser />} />
         <Route path="/category/create" element={<CreateCategory />} />

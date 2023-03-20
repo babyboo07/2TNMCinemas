@@ -5,9 +5,9 @@ import { ListParentCategory } from "API/category/category";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftTypography from "components/SoftTypography";
+import { CateForm } from "layouts/Init/initCate";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CateForm } from "./init/initCate";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");

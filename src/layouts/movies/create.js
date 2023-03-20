@@ -4,9 +4,16 @@ import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
+import { CustomListCategory } from "layouts/utils/GetData";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Select from "react-select";
+import Select, {
+  components,
+  MultiValueGenericProps,
+  MultiValueProps,
+  OnChangeValue,
+  Props,
+} from 'react-select';
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -30,14 +37,15 @@ const Createnew = () => {
 
   const fetchData = async () => {
     const list = await ListCategory();
-    setListCategory(list);
+    const customList = CustomListCategory(list);
+    setListCategory(customList);
+
     console.log(list);
   };
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
+
+  const onChange = (selectedOptions: OnChangeValue<lstCategory, true>) => {
+    console.log(selectedOptions)
+  }
 
   return (
     <DashboardLayout>
@@ -107,7 +115,7 @@ const Createnew = () => {
                       </SoftTypography>
                     </SoftBox>
                     <select
-                      {...register("category")}
+                      {...register("director")}
                       className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                     >
                       <option value="">Select...</option>
@@ -125,9 +133,10 @@ const Createnew = () => {
                       className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full "
                       isMulti
                       name="category"
-                      options={options}
+                      options={lstCategory}
                       classNamePrefix="select"
-                      {...register("category")}
+                      onChange={onChange}
+                      // {...register("category")}
                     />
                   </SoftBox>
                   <div className="grid grid-cols-2 gap-2">

@@ -1,5 +1,5 @@
 import { Card, FormHelperText } from "@mui/material";
-import { saveCast } from "API/cast/cast";
+import { saveDirector } from "API/director/director";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
@@ -17,7 +17,7 @@ export default function CreateDirector() {
     formState: { errors },
   } = useForm();
 
-  const onSubmitNewUser = async (data) => {
+  const onSubmitNewDirector = async (data) => {
     console.log(data);
     await saveDirector(data);
   };
@@ -28,13 +28,18 @@ export default function CreateDirector() {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
-            <SoftBox onSubmit={handleSubmit(onSubmitNewUser)} component="form" role="form" p={2}>
+            <SoftBox
+              onSubmit={handleSubmit(onSubmitNewDirector)}
+              component="form"
+              role="form"
+              p={2}
+            >
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
                       <SoftTypography component="label" variant="caption" fontWeight="bold">
-                      Director Name
+                        Director Name
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
@@ -44,14 +49,13 @@ export default function CreateDirector() {
                     />
                     {errors.directorName && (
                       <FormHelperText error id="component-error-text">
-                       Director Name is required
+                        Director Name is required
                       </FormHelperText>
                     )}
                   </SoftBox>
-
                 </div>
               </div>
-              <SoftBox mt={4} mb={1}>
+              <SoftBox mt={3} mb={1}>
                 <SoftButton type="submit" variant="gradient" color="info">
                   Create
                 </SoftButton>

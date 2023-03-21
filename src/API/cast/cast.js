@@ -17,33 +17,44 @@ const listCast = () => {
   }
 };
 
-const saveCast= (data) => {
+const saveCast = (data) => {
   try {
     return axios.post(URL + "/admin/cast/save", data, config).then((res) => {
-      if(res.status === 200) {
+      if (res.status === 200) {
         window.location.href = "/cast";
         return res.data;
       }
-    })
+    });
   } catch (error) {
-    
+    console.log(error);
   }
-}
+};
 
 const getCastbyId = (id) => {
   try {
-    return axios.get(URL + "/admin/cast/"+ id , config).then(res => {
-      if(res.status === 200){
+    return axios.get(URL + "/admin/cast/" + id, config).then((res) => {
+      if (res.status === 200) {
         console.log(res.data);
         return res.data;
       }
-    })
+    });
   } catch (error) {
-    
+    console.log(error);
   }
+};
 
+const deleteCastById = (id) => {
+  try {
+    return axios.post(URL + "/admin/cast/delete/" + id, config).then((res) => {
+      console.log(res.data);
+      if (res.status === 200) {
+        window.location.href = "/cast";
+        return res.data;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-}
-
-
-export { listCast , saveCast , getCastbyId };
+export { listCast, saveCast, getCastbyId, deleteCastById };

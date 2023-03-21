@@ -40,6 +40,7 @@ import CreateCast from "layouts/cast/create";
 import UpdateCast from "layouts/cast/edit";
 import DetailCast from "layouts/cast/detail";
 import CreateDirector from "layouts/director/create";
+import UpdateDirector from "layouts/director/edit";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();

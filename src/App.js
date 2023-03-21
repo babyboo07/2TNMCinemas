@@ -41,6 +41,9 @@ import UpdateCast from "layouts/cast/edit";
 import DetailCast from "layouts/cast/detail";
 import CreateDirector from "layouts/director/create";
 import UpdateDirector from "layouts/director/edit";
+import CreateRoom from "layouts/room/create";
+import UpdateRoom from "layouts/room/edit";
+import CreateSeat from "layouts/seat/create";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -155,6 +158,10 @@ export default function App() {
         <Route path="/cast/detail" element={<DetailCast />} />
         <Route path="/director/create" element={<CreateDirector />} />
         <Route path="/director/edit/:directorId" element={<UpdateDirector />} />
+        <Route path="/room/create" element={<CreateRoom />} />
+        <Route path="/room/edit/:roomId" element={<UpdateRoom />} />
+        <Route path="/seat/create" element={<CreateSeat />} />
+        <Route path="/seat/edit/:seatId" element={<UpdateSeat />} />
       </Routes>
     </ThemeProvider>
   );

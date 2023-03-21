@@ -1,10 +1,25 @@
 import { Card } from "@mui/material";
+import { getMoviesById } from "API/movies/movie";
 import SoftBox from "components/SoftBox";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
 const DetailMovie = () => {
+  const [movieInfo, setMovieInfo] = useState();
+  const movieId = useParams();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const movie = await getMoviesById(movieId);
+    setMovieInfo(movie);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -16,22 +31,11 @@ const DetailMovie = () => {
                 <div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Title:</span>
-                    <span className="uppercase text-base">
-                      TOM & JERRY: QUẬY TUNG NEW YORK (CHIẾU LẠI)
-                    </span>
+                    <span className="uppercase text-base">{movieInfo.titile}</span>
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Desciption:</span>
-                    <span className="text-base">
-                      “Sau nhiều năm chành chọe, nay cặp kỳ phùng địch thủ nổi tiếng nhất thế giới
-                      Tom và Jerry đã làm hòa, khăn gói rời khỏi mái nhà chung, và bắt đầu hành
-                      trình của riêng mình. Chuột Jerry nay trú ngụ tại một khách sạn sang trọng,
-                      nơi chuẩn bị tổ chức một đám cưới Thế kỷ. Cô nhân viên mới Kayla được giao cho
-                      nhiệm vụ đuổi Jerry đi nên mang về một chàng mèo “mình đầy kinh nghiệm” đối
-                      phó với chuột, không ai khác chính là Tom. Và thế là cuộc chiến mèo - chuột
-                      lại nổ ra, kéo theo loạt rắc rối cho khách sạn, và biết bao tình huống dở khóc
-                      dở cười.“
-                    </span>
+                    <span className="text-base">{movieInfo.description}</span>
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Category:</span>
@@ -47,11 +51,11 @@ const DetailMovie = () => {
                   <div className="grid grid-cols-3 gap-2">
                     <div className="flex pt-3">
                       <span className="pr-3 text-base font-medium">Running Time:</span>
-                      <span className="text-base">110 minutes</span>
+                      <span className="text-base">{movieInfo.runningTime}</span>
                     </div>
                     <div className="flex pt-3">
                       <span className="pr-3 text-base font-medium">Release Date:</span>
-                      <span className="text-base">Mar 10, 2023</span>
+                      <span className="text-base">{movieInfo.releaseDate}</span>
                     </div>
                     <div className="flex pt-3">
                       <span className="pr-3 text-base font-medium">Hot:</span>
@@ -67,7 +71,7 @@ const DetailMovie = () => {
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Director:</span>
-                    <span className="text-base">Tim Story</span>
+                    <span className="text-base">{movieInfo.directorName}</span>
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Cast:</span>
@@ -79,7 +83,7 @@ const DetailMovie = () => {
                       className="w-full h-64"
                       id="video"
                       title="movie"
-                      src="https://www.youtube.com/embed/1ue84WhBdK4&t=1s"
+                      src={"https://www.youtube.com/embed/" + movieInfo.trailer}
                     ></iframe>
                   </div>
                 </div>

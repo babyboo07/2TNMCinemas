@@ -144,8 +144,8 @@ export default function App() {
         <Route path="/authentication/sign-in" element={<SignIn />} />
         <Route path="/authentication/sign-up" element={<SignUp />} />
         <Route path="/movies/create" element={<Createnew />} />
-        <Route path="/movies/edit" element={<EditMovie />} />
-        <Route path="/movies/detail" element={<DetailMovie />} />
+        <Route path="/movies/edit/:movieId" element={<EditMovie />} />
+        <Route path="/movies/detail/:movieId" element={<DetailMovie />} />
         <Route path="/member/create" element={<CreateUser />} />
         <Route path="/member/edit/:userId" element={<EditUser />} />
         <Route path="/category/create" element={<CreateCategory />} />
@@ -155,8 +155,6 @@ export default function App() {
         <Route path="/cast/detail" element={<DetailCast />} />
         <Route path="/director/create" element={<CreateDirector />} />
         <Route path="/director/edit/:directorId" element={<UpdateDirector />} />
-
-
       </Routes>
     </ThemeProvider>
   );

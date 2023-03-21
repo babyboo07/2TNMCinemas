@@ -166,6 +166,7 @@ const Createnew = () => {
                       classNamePrefix="select"
                       {...register("director", { required: true })}
                     >
+                      <option value={""}>Select</option>
                       {lstDirector.length > 0 &&
                         lstDirector.map((d) => (
                           <option key={d.directorId} value={d.directorId}>

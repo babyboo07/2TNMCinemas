@@ -47,7 +47,7 @@ const routes = [
   {
     type: "collapse",
     name: "Movies",
-    key: "Movies",
+    key: "movies",
     route: "/movies",
     icon: <Office size="12px" />,
     component: <Tables />,

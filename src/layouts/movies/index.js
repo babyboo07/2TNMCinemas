@@ -13,8 +13,21 @@ import Footer from "examples/Footer";
 // Data
 import SoftButton from "components/SoftButton";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { listMovies } from "API/movies/movie";
 
 function Tables() {
+  const [listMovie, setListMovie] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const list = await listMovies();
+    setListMovie(list);
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -64,35 +77,41 @@ function Tables() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-white border-b hover:bg-gray-50">
-                      <td className="px-6 py-4"></td>
-                      <td className="px-6 py-4"></td>
-                      <td className="px-6 py-4"></td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div
-                          // className={`${
-                          //   cate.status === 1 ? "text-green-500" : "text-neutral-500"
-                          // }`}
-                          >
-                            {/* {cate.status === 1 ? "WORKING" : "OFF"} */}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4"></td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div
-                            data-te-chip-init
-                            data-te-ripple-init
-                            className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                            data-te-close="true"
-                          >
-                            <Link className="uppercase" to={"/movies/edit"}>update</Link>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                    {listMovie.length > 0 &&
+                      listMovie.map((m) => (
+                        <tr key={m.id} className="bg-white border-b hover:bg-gray-50">
+                          <td className="px-6 py-4">{m.titile}</td>
+                          <td className="px-6 py-4">{m.directorName}</td>
+                          <td className="px-6 py-4">{m.releaseDate}</td>
+                          <td className="px-6 py-4">{m.rated}</td>
+                          <td className="px-6 py-4">{m.createByName}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center">
+                              <div
+                                data-te-chip-init
+                                data-te-ripple-init
+                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                data-te-close="true"
+                              >
+                                <Link className="uppercase" to={"/movies/edit" + m.id}>
+                                  update
+                                </Link>
+                              </div>
+                              <div
+                                data-te-chip-init
+                                data-te-ripple-init
+                                className={`${"bg-teal-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                data-te-close="true"
+                              >
+                                <Link className="uppercase" to={"/movies/detail" + m.id}>
+                                  detail
+                                </Link>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    ;
                   </tbody>
                 </table>
               </div>

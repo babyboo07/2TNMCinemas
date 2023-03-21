@@ -2,6 +2,7 @@ import { Card, FormHelperText } from "@mui/material";
 import { listCast } from "API/cast/cast";
 import { ListCategory } from "API/category/category";
 import { listDirector } from "API/director/director";
+import { saveMovies } from "API/movies/movie";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
@@ -32,10 +33,11 @@ const Createnew = () => {
 
   const onSubmit = (data) => {
     data.trailers = videoID;
-    data.cast = listcast;
+    data.casts = listcast;
     data.movieCate = listCate;
     console.log(videoID);
     console.log(data);
+    saveMovies(data);
   };
 
   useEffect(() => {
@@ -84,11 +86,11 @@ const Createnew = () => {
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
-                      id="title"
+                      id="titile"
                       placeholder="Title"
-                      {...register("title", { required: true })}
+                      {...register("titile", { required: true })}
                     />
-                    {errors.title && (
+                    {errors.titile && (
                       <FormHelperText error id="component-error-text">
                         Title is required
                       </FormHelperText>
@@ -117,7 +119,9 @@ const Createnew = () => {
                         Thumnail
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput id="thumnail" type="file" {...register("thumnail")} />
+                    <SoftInput id="thumnail" type="file" 
+                    // {...register("thumnail")} 
+                    />
                   </SoftBox>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>

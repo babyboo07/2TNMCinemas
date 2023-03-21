@@ -2,6 +2,7 @@ import { Card, FormHelperText } from "@mui/material";
 import { listCast } from "API/cast/cast";
 import { ListCategory } from "API/category/category";
 import { listDirector } from "API/director/director";
+import { UploadFileImage } from "API/movie/movie";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
@@ -68,6 +69,14 @@ const Createnew = () => {
     setVideoID(e.target.value.substring(e.target.value.search("=") + 1, e.target.value.length));
   };
 
+  const handleOnchangeFile = ( e) => {
+    const form_data = new FormData();
+    const files = e.target.files;
+
+    form_data.append("file", files[0]);
+    UploadFileImage(form_data)
+  }
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -117,7 +126,7 @@ const Createnew = () => {
                         Thumnail
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput id="thumnail" type="file" {...register("thumnail")} />
+                    <SoftInput id="thumnail" type="file" onChange={handleOnchangeFile} />
                   </SoftBox>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>

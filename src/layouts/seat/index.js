@@ -4,6 +4,7 @@ import Card from "@mui/material/Card";
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
+import { listSeat } from "API/seat/seat";
 // Soft UI Dashboard React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -15,31 +16,29 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { deleteDirectorById } from "API/director/director";
-import { listRoom } from "API/room/room";
-import { deleteRoomById } from "API/room/room";
+import { deleteSeatById } from "API/seat/seat";
 
-export default function TablesRoom() {
-  const [room, setRoom] = useState([]);
+export default function TablesSeat() {
+  const [seat, setSeat] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [id, setId] = useState();
+  const [seatId, setSeatId] = useState();
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    const list = await listRoom();
-    setRoom(list);
+    const list = await listSeat();
+    setSeat(list);
   };
 
   const confirmModal = (id) => {
     setShowModal(true);
-    setId(id);
+    setSeatId(id);
   };
 
-  const deleteRoom = async () => {
-    await deleteRoomById(id);
+  const deleteSeat = async () => {
+    await deleteSeatById(seatId);
   };
 
   return (
@@ -49,8 +48,8 @@ export default function TablesRoom() {
         <SoftBox mb={3}>
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-              <SoftTypography variant="h6">Room Table</SoftTypography>
-              <Link to={"/room/create"}>
+              <SoftTypography variant="h6">Seat Table</SoftTypography>
+              <Link to={"/seat/create"}>
                 <SoftButton variant="gradient" color="info">
                   Create New
                 </SoftButton>
@@ -71,7 +70,7 @@ export default function TablesRoom() {
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-6 py-3">
-                        Room Name
+                      SeatName
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Action
@@ -79,19 +78,19 @@ export default function TablesRoom() {
                     </tr>
                   </thead>
                   <tbody>
-                    {room.length > 0 &&
-                      room.map((r) => (
-                        <tr key={r.roomId} className="bg-white border-b hover:bg-gray-50">
-                          <td className="px-6 py-4">{r.roomName}</td>
+                    {casts.length > 0 &&
+                      casts.map((c) => (
+                        <tr key={c.castId} className="bg-white border-b hover:bg-gray-50">
+                          <td className="px-6 py-4">{c.castName}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               <div
                                 data-te-chip-init
                                 data-te-ripple-init
-                                className={`${"bg-amber-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
                                 data-te-close="true"
                               >
-                                <Link to={"/room/edit/" + r.roomId}>UPDATE</Link>
+                                <Link to={"/seat/edit/" + c.castId}>UPDATE</Link>
                               </div>
                               <div
                                 data-te-chip-init
@@ -102,7 +101,7 @@ export default function TablesRoom() {
                                 <button
                                   type="button"
                                   className="font-medium text-white uppercase"
-                                  onClick={() => confirmModal(r.roomId)}
+                                  onClick={() => confirmModal(c.seatId)}
                                 >
                                   Delete
                                 </button>
@@ -127,7 +126,7 @@ export default function TablesRoom() {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-xl font-semibold">Delete Room</h3>
+                  <h3 className="text-xl font-semibold">Delete Seat</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
@@ -141,7 +140,7 @@ export default function TablesRoom() {
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
                   <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                    Are you sure to delete this room?
+                    Are you sure to delete this seat?
                   </p>
                 </div>
                 {/*footer*/}
@@ -156,7 +155,7 @@ export default function TablesRoom() {
                   <button
                     className="bg-red-500 text-white active:bg-cyan-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => deleteRoom()}
+                    onClick={() => deleteSeat()}
                   >
                     Delete
                   </button>

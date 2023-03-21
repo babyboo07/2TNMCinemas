@@ -10,6 +10,7 @@ const config = {
 const listMovies = () => {
   try {
     return axios.get(URL + `/admin/movies`, config).then((res) => {
+        console.log(res.data);
       return res.data;
     });
   } catch (error) {

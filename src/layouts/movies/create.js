@@ -25,6 +25,8 @@ const Createnew = () => {
   const [videoID, setVideoID] = useState();
   const [listCate, setListCate] = useState([]);
   const [listcast, setListCast] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
+  const [currentFileName , setCurrentFileName] = useState("");
 
   const {
     register,
@@ -33,9 +35,11 @@ const Createnew = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    data.trailers = videoID;
+    data.thumail = currentFileName;
+    data.trailer = videoID;
     data.casts = listcast;
     data.movieCate = listCate;
+    data.createById = userInfo.userId;
     console.log(videoID);
     console.log(data);
     saveMovies(data);
@@ -56,6 +60,12 @@ const Createnew = () => {
     const castList = await listCast();
     const customlistCast = CustomListCast(castList);
     setLstCast(customlistCast);
+
+    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
+    if (user) {
+      const dataUser = JSON.parse(user);
+      setUserInfo(dataUser);
+    }
   };
 
   const onChangeCategory = (selectedOptions) => {
@@ -71,13 +81,15 @@ const Createnew = () => {
     setVideoID(e.target.value.substring(e.target.value.search("=") + 1, e.target.value.length));
   };
 
-  const handleOnchangeFile = ( e) => {
+  const handleOnchangeFile = async (e) => {
     const form_data = new FormData();
     const files = e.target.files;
 
     form_data.append("file", files[0]);
-    UploadFileImage(form_data)
-  }
+    const fileName = await UploadFileImage(form_data);
+
+    setCurrentFileName(fileName);
+  };
 
   return (
     <DashboardLayout>
@@ -112,11 +124,11 @@ const Createnew = () => {
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
-                      id="desciption"
+                      id="description"
                       placeholder="Desciption"
-                      {...register("desciption", { required: true })}
+                      {...register("description", { required: true })}
                     />
-                    {errors.desciption && (
+                    {errors.description && (
                       <FormHelperText error id="component-error-text">
                         Desciption is required
                       </FormHelperText>
@@ -128,7 +140,7 @@ const Createnew = () => {
                         Thumnail
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput id="thumnail" type="file" {...register("thumnail")} />
+                    <SoftInput id="thumail" type="file" onChange={handleOnchangeFile} />
                   </SoftBox>
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
@@ -139,7 +151,7 @@ const Createnew = () => {
                         type="text"
                         onChange={handleChange}
                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                        id="trailers"
+                        id="trailer"
                         placeholder="Link youtube"
                       />
                     </SoftBox>
@@ -172,10 +184,10 @@ const Createnew = () => {
                       </SoftTypography>
                     </SoftBox>
                     <select
-                      id="director"
+                      id="directorId"
                       className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
                       classNamePrefix="select"
-                      {...register("director", { required: true })}
+                      {...register("directorId", { required: true })}
                     >
                       <option value={""}>Select</option>
                       {lstDirector.length > 0 &&

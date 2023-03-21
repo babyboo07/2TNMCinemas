@@ -45,7 +45,7 @@ const getRoomById = (id) => {
 
 const deleteRoomById = (id) => {
   try {
-    return axios.post(URL + "/admin/room/delete/" + id, config).then((res) => {
+    return axios.get(URL + "/admin/room/delete/" + id, config).then((res) => {
       console.log(res.data);
       if (res.status === 200) {
         window.location.href = "/room";

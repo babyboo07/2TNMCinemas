@@ -76,7 +76,7 @@ export default function TablesCategory() {
                   <tbody>
                     {lstCategory.length > 0 &&
                       lstCategory.map((cate) => (
-                        <tr className="bg-white border-b hover:bg-gray-50">
+                        <tr key={cate.categoryId} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{cate.categoryName}</td>
                           <td className="px-6 py-4">{cate.parentCateName}</td>
                           <td className="px-6 py-4">
@@ -84,7 +84,7 @@ export default function TablesCategory() {
                               <div
                                 className={`${
                                   cate.status === 1 ? "text-green-500" : "text-neutral-500"
-                                }` }
+                                }`}
                               >
                                 {cate.status === 1 ? "WORKING" : "OFF"}
                               </div>

@@ -3,7 +3,6 @@ import { Card, FormHelperText } from "@mui/material";
 import { saveSeat } from "API/seat/seat";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
-import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,9 +37,12 @@ export default function UpdateSeat() {
     }
   };
 
-  const onSubmitNewUser = async (data) => {
+  const onSubmitSeat = async (data) => {
     console.log(seat);
-    await saveSeat(seat);
+    data.id = seatId;
+    data.stand = stand;
+    data.isVip = vip;
+    saveSeat(data);
   };
 
   return (
@@ -49,7 +51,7 @@ export default function UpdateSeat() {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
-            <SoftBox onSubmit={handleSubmit(onSubmitNewUser)} component="form" role="form" p={2}>
+            <SoftBox onSubmit={handleSubmit(onSubmitSeat)} component="form" role="form" p={2}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <SoftBox mb={2}>
@@ -62,7 +64,7 @@ export default function UpdateSeat() {
                       className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                       type="text"
                       value={stand != null ? stand : ""}
-                      onChange={(e)=>setStand(e.target.value)}
+                      onChange={(e) => setStand(e.target.value)}
                     />
                   </SoftBox>
                   <SoftBox mb={2}>

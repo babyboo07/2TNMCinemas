@@ -162,7 +162,7 @@ export default function App() {
         <Route path="/room/create" element={<CreateRoom />} />
         <Route path="/room/edit/:roomId" element={<UpdateRoom />} />
         <Route path="/seat/create" element={<CreateSeat />} />
-        <Route path="/seat/edit/:roomId" element={<UpdateSeat />} />
+        <Route path="/seat/edit/:seatId" element={<UpdateSeat />} />
       </Routes>
     </ThemeProvider>
   );

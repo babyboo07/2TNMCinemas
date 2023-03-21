@@ -45,7 +45,7 @@ const getMoviesById = (id) => {
 
 const deleteMoviesById = (id) => {
   try {
-    return axios.post(URL + "/admin/movie/delete/" + id, config).then((res) => {
+    return axios.get(URL + "/admin/movie/delete/" + id, config).then((res) => {
       console.log(res.data);
       if (res.status === 200) {
         window.location.href = "/movies";

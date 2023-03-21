@@ -45,7 +45,7 @@ const getCastbyId = (id) => {
 
 const deleteCastById = (id) => {
   try {
-    return axios.post(URL + "/admin/cast/delete/" + id, config).then((res) => {
+    return axios.get(URL + "/admin/cast/delete/" + id, config).then((res) => {
       console.log(res.data);
       if (res.status === 200) {
         window.location.href = "/cast";

@@ -70,7 +70,10 @@ export default function TablesSeat() {
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-6 py-3">
-                      SeatName
+                        SeatName
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Vip
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Action
@@ -79,9 +82,20 @@ export default function TablesSeat() {
                   </thead>
                   <tbody>
                     {seat.length > 0 &&
-                      seat.map((c) => (
-                        <tr key={c.castId} className="bg-white border-b hover:bg-gray-50">
-                          <td className="px-6 py-4">{c.castName}</td>
+                      seat.map((s) => (
+                        <tr key={s.id} className="bg-white border-b hover:bg-gray-50">
+                          <td className="px-6 py-4">{s.stand}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center">
+                              <div
+                                className={`${
+                                  s.isVip === 1 ? "text-green-500" : "text-neutral-500"
+                                }`}
+                              >
+                                {s.isVip === 1 ? "VIP" : "NORMAL"}
+                              </div>
+                            </div>
+                          </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               <div
@@ -90,7 +104,7 @@ export default function TablesSeat() {
                                 className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
                                 data-te-close="true"
                               >
-                                <Link to={"/seat/edit/" + c.castId}>UPDATE</Link>
+                                <Link to={"/seat/edit/" + s.id}>UPDATE</Link>
                               </div>
                               <div
                                 data-te-chip-init
@@ -101,7 +115,7 @@ export default function TablesSeat() {
                                 <button
                                   type="button"
                                   className="font-medium text-white uppercase"
-                                  onClick={() => confirmModal(c.seatId)}
+                                  onClick={() => confirmModal(s.id)}
                                 >
                                   Delete
                                 </button>

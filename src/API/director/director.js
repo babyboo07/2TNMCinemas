@@ -45,7 +45,7 @@ const getDirectorbyId = (id) => {
 
 const deleteDirectorById = (id) => {
   try {
-    return axios.post(URL + "/admin/director/delete/" + id, config).then((res) => {
+    return axios.get(URL + "/admin/director/delete/" + id, config).then((res) => {
       console.log(res.data);
       if (res.status === 200) {
         window.location.href = "/director";

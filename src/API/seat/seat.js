@@ -9,7 +9,7 @@ const config = {
 
 const listSeat = () => {
   try {
-    return axios.get(URL + `/admin/seat`, config).then((res) => {
+    return axios.get(URL + `/admin/seats`, config).then((res) => {
       return res.data;
     });
   } catch (error) {
@@ -45,7 +45,7 @@ const getSeatById = (id) => {
 
 const deleteSeatById = (id) => {
   try {
-    return axios.post(URL + "/admin/seat/delete/" + id, config).then((res) => {
+    return axios.get(URL + "/admin/seat/delete/" + id, config).then((res) => {
       console.log(res.data);
       if (res.status === 200) {
         window.location.href = "/seat";

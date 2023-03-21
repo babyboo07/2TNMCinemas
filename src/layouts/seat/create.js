@@ -38,9 +38,9 @@ export default function CreateSeat() {
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
-                      id="seatName"
+                      id="stand"
                       placeholder="Seat Name"
-                      {...register("seatName", { required: true })}
+                      {...register("stand", { required: true })}
                     />
                     {errors.seatName && (
                       <FormHelperText error id="component-error-text">
@@ -56,7 +56,7 @@ export default function CreateSeat() {
                     </SoftBox>
                     <select
                       className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                      {...register("vip")}
+                      {...register("isVip")}
                     >
                       <option value="">Select...</option>
                       <option value="1">Vip</option>

@@ -30,7 +30,7 @@ const saveSeat = (data) => {
   }
 };
 
-const getSeatbyId = (id) => {
+const getSeatById = (id) => {
   try {
     return axios.get(URL + "/admin/seat/" + id, config).then((res) => {
       if (res.status === 200) {
@@ -57,4 +57,4 @@ const deleteSeatById = (id) => {
   }
 };
 
-export { listSeat, saveSeat, getSeatbyId, deleteSeatById };
+export { listSeat, saveSeat, getSeatById, deleteSeatById };

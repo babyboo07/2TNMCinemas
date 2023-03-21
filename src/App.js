@@ -43,6 +43,8 @@ import CreateDirector from "layouts/director/create";
 import UpdateDirector from "layouts/director/edit";
 import CreateRoom from "layouts/room/create";
 import UpdateRoom from "layouts/room/edit";
+import UpdateSeat from "layouts/seat/edit";
+import CreateSeat from "layouts/seat/create";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -159,6 +161,8 @@ export default function App() {
         <Route path="/director/edit/:directorId" element={<UpdateDirector />} />
         <Route path="/room/create" element={<CreateRoom />} />
         <Route path="/room/edit/:roomId" element={<UpdateRoom />} />
+        <Route path="/seat/create" element={<CreateSeat />} />
+        <Route path="/seat/edit/:roomId" element={<UpdateSeat />} />
       </Routes>
     </ThemeProvider>
   );

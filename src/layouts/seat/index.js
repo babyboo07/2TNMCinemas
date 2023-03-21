@@ -78,8 +78,8 @@ export default function TablesSeat() {
                     </tr>
                   </thead>
                   <tbody>
-                    {casts.length > 0 &&
-                      casts.map((c) => (
+                    {seat.length > 0 &&
+                      seat.map((c) => (
                         <tr key={c.castId} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{c.castName}</td>
                           <td className="px-6 py-4">

@@ -34,7 +34,7 @@ export default function CreateSeat() {
                   <SoftBox mb={2}>
                     <SoftBox mb={1} ml={0.5}>
                       <SoftTypography component="label" variant="caption" fontWeight="bold">
-                      Seat Name
+                        Seat Name
                       </SoftTypography>
                     </SoftBox>
                     <SoftInput
@@ -48,7 +48,21 @@ export default function CreateSeat() {
                       </FormHelperText>
                     )}
                   </SoftBox>
-
+                  <SoftBox mb={2}>
+                    <SoftBox mb={1} ml={0.5}>
+                      <SoftTypography component="label" variant="caption" fontWeight="bold">
+                        Vip
+                      </SoftTypography>
+                    </SoftBox>
+                    <select
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                      {...register("vip")}
+                    >
+                      <option value="">Select...</option>
+                      <option value="1">Vip</option>
+                      <option value="0">Normal</option>
+                    </select>
+                  </SoftBox>
                 </div>
               </div>
               <SoftBox mt={4} mb={1}>

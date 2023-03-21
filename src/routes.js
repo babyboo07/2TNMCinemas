@@ -33,6 +33,7 @@ import TablesCategory from "layouts/category";
 import Tables from "layouts/movies";
 import TablesCast from "layouts/cast";
 import TablesDirector from "layouts/director";
+import TablesRoom from "layouts/room";
 
 const routes = [
   {
@@ -87,6 +88,15 @@ const routes = [
     route: "/director",
     icon: <Office size="12px" />,
     component: <TablesDirector />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Room",
+    key: "room",
+    route: "/room",
+    icon: <Office size="12px" />,
+    component: <TablesRoom />,
     noCollapse: true,
   },
   // { type: "title", title: "Account Pages", key: "account-pages" },

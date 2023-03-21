@@ -1,5 +1,6 @@
 import { Card } from "@mui/material";
 import { getMoviesById } from "API/movies/movie";
+import { URL } from "AppConstants";
 import SoftBox from "components/SoftBox";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -16,7 +17,7 @@ const DetailMovie = () => {
   }, []);
 
   const fetchData = async () => {
-    const movie = await getMoviesById(movieId);
+    const movie = await getMoviesById(movieId.movieId);
     setMovieInfo(movie);
   };
 
@@ -31,11 +32,11 @@ const DetailMovie = () => {
                 <div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Title:</span>
-                    <span className="uppercase text-base">{movieInfo.titile}</span>
+                    <span className="uppercase text-base">{movieInfo?.titile}</span>
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Desciption:</span>
-                    <span className="text-base">{movieInfo.description}</span>
+                    <span className="text-base">{movieInfo?.description}</span>
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Category:</span>
@@ -51,11 +52,11 @@ const DetailMovie = () => {
                   <div className="grid grid-cols-3 gap-2">
                     <div className="flex pt-3">
                       <span className="pr-3 text-base font-medium">Running Time:</span>
-                      <span className="text-base">{movieInfo.runningTime}</span>
+                      <span className="text-base">{movieInfo?.runningTime}</span>
                     </div>
                     <div className="flex pt-3">
                       <span className="pr-3 text-base font-medium">Release Date:</span>
-                      <span className="text-base">{movieInfo.releaseDate}</span>
+                      <span className="text-base">{movieInfo?.releaseDate}</span>
                     </div>
                     <div className="flex pt-3">
                       <span className="pr-3 text-base font-medium">Hot:</span>
@@ -71,7 +72,7 @@ const DetailMovie = () => {
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Director:</span>
-                    <span className="text-base">{movieInfo.directorName}</span>
+                    <span className="text-base">{movieInfo?.directorName}</span>
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Cast:</span>
@@ -83,17 +84,14 @@ const DetailMovie = () => {
                       className="w-full h-64"
                       id="video"
                       title="movie"
-                      src={"https://www.youtube.com/embed/" + movieInfo.trailer}
+                      src={"https://www.youtube.com/embed/" + movieInfo?.trailer}
                     ></iframe>
                   </div>
                 </div>
                 <div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Thumnail:</span>
-                    <img
-                      src="https://www.cgv.vn/media/catalog/product/cache/3/image/c5f0a1eff4c394a251036189ccddaacd/t/o/tom_jerry_rerun_poster.jpg"
-                      alt="img title"
-                    />
+                    <img src={URL + movieInfo?.thumail} alt="img title" />
                   </div>
                 </div>
               </div>

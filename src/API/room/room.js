@@ -7,9 +7,9 @@ const config = {
   },
 };
 
-const listMovies = () => {
+const listRoom = () => {
   try {
-    return axios.get(URL + `/admin/movies`, config).then((res) => {
+    return axios.get(URL + `/admin/room`, config).then((res) => {
       return res.data;
     });
   } catch (error) {
@@ -17,11 +17,11 @@ const listMovies = () => {
   }
 };
 
-const saveMovies = (data) => {
+const saveRoom = (data) => {
   try {
-    return axios.post(URL + "/admin/movie/save", data, config).then((res) => {
+    return axios.post(URL + "/admin/room/save", data, config).then((res) => {
       if (res.status === 200) {
-        window.location.href = "/movies";
+        window.location.href = "/room";
         return res.data;
       }
     });
@@ -30,9 +30,9 @@ const saveMovies = (data) => {
   }
 };
 
-const getMoviesById = (id) => {
+const getRoomById = (id) => {
   try {
-    return axios.get(URL + "/admin/movie/" + id, config).then((res) => {
+    return axios.get(URL + "/admin/room/" + id, config).then((res) => {
       if (res.status === 200) {
         console.log(res.data);
         return res.data;
@@ -43,12 +43,12 @@ const getMoviesById = (id) => {
   }
 };
 
-const deleteMoviesById = (id) => {
+const deleteRoomById = (id) => {
   try {
-    return axios.post(URL + "/admin/movie/delete/" + id, config).then((res) => {
+    return axios.post(URL + "/admin/room/delete/" + id, config).then((res) => {
       console.log(res.data);
       if (res.status === 200) {
-        window.location.href = "/movies";
+        window.location.href = "/room";
         return res.data;
       }
     });
@@ -57,4 +57,4 @@ const deleteMoviesById = (id) => {
   }
 };
 
-export { listMovies, saveMovies, getMoviesById, deleteMoviesById };
+export { listRoom, saveRoom, getRoomById, deleteRoomById };

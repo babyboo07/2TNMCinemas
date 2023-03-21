@@ -93,7 +93,7 @@ function Tables() {
                                 className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
                                 data-te-close="true"
                               >
-                                <Link className="uppercase" to={"/movies/edit" + m.id}>
+                                <Link className="uppercase" to={"/movies/edit/" + m.id}>
                                   update
                                 </Link>
                               </div>
@@ -103,7 +103,7 @@ function Tables() {
                                 className={`${"bg-teal-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
                                 data-te-close="true"
                               >
-                                <Link className="uppercase" to={"/movies/detail" + m.id}>
+                                <Link className="uppercase" to={"/movies/detail/" + m.id}>
                                   detail
                                 </Link>
                               </div>

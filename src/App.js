@@ -45,6 +45,7 @@ import CreateRoom from "layouts/room/create";
 import UpdateRoom from "layouts/room/edit";
 import UpdateSeat from "layouts/seat/edit";
 import CreateSeat from "layouts/seat/create";
+import Home from "layouts/client/home";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -127,43 +128,46 @@ export default function App() {
       </ThemeProvider>
     </CacheProvider>
   ) : (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {layout === "dashboard" && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={brand}
-            brandName="2TNMCinemas"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-        </>
-      )}
-      {layout === "vr"}
-      <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
-        <Route path="/authentication/sign-in" element={<SignIn />} />
-        <Route path="/authentication/sign-up" element={<SignUp />} />
-        <Route path="/movies/create" element={<Createnew />} />
-        <Route path="/movies/edit/:movieId" element={<EditMovie />} />
-        <Route path="/movies/detail/:movieId" element={<DetailMovie />} />
-        <Route path="/member/create" element={<CreateUser />} />
-        <Route path="/member/edit/:userId" element={<EditUser />} />
-        <Route path="/category/create" element={<CreateCategory />} />
-        <Route path="/category/edit/:cateId" element={<UpdateCategory />} />
-        <Route path="/cast/create" element={<CreateCast />} />
-        <Route path="/cast/edit/:castId" element={<UpdateCast />} />
-        <Route path="/cast/detail" element={<DetailCast />} />
-        <Route path="/director/create" element={<CreateDirector />} />
-        <Route path="/director/edit/:directorId" element={<UpdateDirector />} />
-        <Route path="/room/create" element={<CreateRoom />} />
-        <Route path="/room/edit/:roomId" element={<UpdateRoom />} />
-        <Route path="/seat/create" element={<CreateSeat />} />
-        <Route path="/seat/edit/:seatId" element={<UpdateSeat />} />
-      </Routes>
-    </ThemeProvider>
+    // <ThemeProvider theme={theme}>
+    //   <CssBaseline />
+    //   {layout === "dashboard" && (
+    //     <>
+    //       <Sidenav
+    //         color={sidenavColor}
+    //         brand={brand}
+    //         brandName="2TNMCinemas"
+    //         routes={routes}
+    //         onMouseEnter={handleOnMouseEnter}
+    //         onMouseLeave={handleOnMouseLeave}
+    //       />
+    //     </>
+    //   )}
+    //   {layout === "vr"}
+    //   <Routes>
+    //     {getRoutes(routes)}
+    //     <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
+    //     <Route path="/authentication/sign-in" element={<SignIn />} />
+    //     <Route path="/authentication/sign-up" element={<SignUp />} />
+    //     <Route path="/movies/create" element={<Createnew />} />
+    //     <Route path="/movies/edit/:movieId" element={<EditMovie />} />
+    //     <Route path="/movies/detail/:movieId" element={<DetailMovie />} />
+    //     <Route path="/member/create" element={<CreateUser />} />
+    //     <Route path="/member/edit/:userId" element={<EditUser />} />
+    //     <Route path="/category/create" element={<CreateCategory />} />
+    //     <Route path="/category/edit/:cateId" element={<UpdateCategory />} />
+    //     <Route path="/cast/create" element={<CreateCast />} />
+    //     <Route path="/cast/edit/:castId" element={<UpdateCast />} />
+    //     <Route path="/cast/detail" element={<DetailCast />} />
+    //     <Route path="/director/create" element={<CreateDirector />} />
+    //     <Route path="/director/edit/:directorId" element={<UpdateDirector />} />
+    //     <Route path="/room/create" element={<CreateRoom />} />
+    //     <Route path="/room/edit/:roomId" element={<UpdateRoom />} />
+    //     <Route path="/seat/create" element={<CreateSeat />} />
+    //     <Route path="/seat/edit/:seatId" element={<UpdateSeat />} />
+    //   </Routes>
+    // </ThemeProvider>
+    <Routes>
+      <Route path="/home" element={<Home />} />
+    </Routes>
   );
 }

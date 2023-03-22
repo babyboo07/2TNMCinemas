@@ -35,6 +35,7 @@ import TablesCast from "layouts/cast";
 import TablesDirector from "layouts/director";
 import TablesRoom from "layouts/room";
 import TablesSeat from "layouts/seat";
+import TableMovieDay from "layouts/movieDay";
 
 const routes = [
   {
@@ -107,6 +108,15 @@ const routes = [
     route: "/seat",
     icon: <Office size="12px" />,
     component: <TablesSeat />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Movie Day",
+    key: "movieDay",
+    route: "/movieDay",
+    icon: <Office size="12px" />,
+    component: <TableMovieDay />,
     noCollapse: true,
   },
   // { type: "title", title: "Account Pages", key: "account-pages" },

@@ -1,16 +1,21 @@
 import { Card } from "@mui/material";
 import { getMoviesById } from "API/movies/movie";
-import { URL_IMG } from "AppConstants";
+import { URL } from "AppConstants";
 import SoftBox from "components/SoftBox";
+import SoftButton from "components/SoftButton";
+import { CustomListCast } from "layouts/utils/GetData";
+import { CustomListCategory } from "layouts/utils/GetData";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
 const DetailMovie = () => {
-  const [movieInfo, setMovieInfo] = useState();
   const movieId = useParams();
+  const [movieInfo, setMovieInfo] = useState();
+  const [castNames, setCastName] = useState([]);
+  const [cateNames, setCateName] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -18,6 +23,12 @@ const DetailMovie = () => {
 
   const fetchData = async () => {
     const movie = await getMoviesById(movieId.movieId);
+    const lstCurrentCate = CustomListCategory(movie.movieCate);
+    const lstCurrentCast = CustomListCast(movie.casts);
+
+    setCateName(lstCurrentCate);
+    setCastName(lstCurrentCast);
+
     setMovieInfo(movie);
   };
 
@@ -40,14 +51,17 @@ const DetailMovie = () => {
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Category:</span>
-                    <div
-                      data-te-chip-init
-                      data-te-ripple-init
-                      className="[word-wrap: break-word] mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-[#eceff1] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"
-                      data-te-close="true"
-                    >
-                      Text
-                    </div>
+                    {cateNames.length > 0 &&
+                      cateNames.map((item) => (
+                        <div
+                          data-te-chip-init
+                          data-te-ripple-init
+                          className="[word-wrap: break-word] mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-[#eceff1] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"
+                          data-te-close="true"
+                        >
+                          {item.label}
+                        </div>
+                      ))}
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <div className="flex pt-3">
@@ -76,7 +90,12 @@ const DetailMovie = () => {
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Cast:</span>
-                    <span className="text-base">Chloë Grace Moretz, Michael Peña, Rob Delaney</span>
+                    {castNames.length > 0 &&
+                      castNames.map((item) => (
+                        <div className="[word-wrap: break-word] mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-[#eceff1] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]">
+                          {item.label}
+                        </div>
+                      ))}
                   </div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Trailers:</span>
@@ -91,10 +110,17 @@ const DetailMovie = () => {
                 <div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Thumnail:</span>
-                    <img src={URL_IMG + movieInfo?.thumail} alt="img title" />
+                    <img src={"http://localhost:8080" + movieInfo?.thumail} alt="img title" />
                   </div>
                 </div>
               </div>
+            </SoftBox>
+            <SoftBox mt={4} mb={1} ml={2}>
+              <Link to="/movies">
+                <SoftButton variant="gradient" color="secondary">
+                  Back to List
+                </SoftButton>
+              </Link>
             </SoftBox>
           </Card>
         </SoftBox>

@@ -2,6 +2,7 @@ import { Card, FormHelperText } from "@mui/material";
 import { listCast } from "API/cast/cast";
 import { ListCategory } from "API/category/category";
 import { listDirector } from "API/director/director";
+import { getMoviesById } from "API/movies/movie";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
@@ -10,6 +11,7 @@ import { CustomListCast } from "layouts/utils/GetData";
 import { CustomListCategory } from "layouts/utils/GetData";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import Select from "react-select";
 
 const { default: Footer } = require("examples/Footer");
@@ -17,13 +19,15 @@ const { default: DashboardLayout } = require("examples/LayoutContainers/Dashboar
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
 const EditMovie = () => {
+  const movieId = useParams();
+
   const [lstCategory, setListCategory] = useState([]);
   const [lstDirector, setLstDirector] = useState([]);
   const [lstCast, setLstCast] = useState([]);
   const [videoID, setVideoID] = useState();
   const [listCate, setListCate] = useState([]);
   const [listcast, setListCast] = useState([]);
-
+  const [infoMovie, setInfoMovie] = useState();
   const {
     register,
     handleSubmit,
@@ -53,6 +57,9 @@ const EditMovie = () => {
     const castList = await listCast();
     const customlistCast = CustomListCast(castList);
     setLstCast(customlistCast);
+
+    const info = await getMoviesById(movieId.movieId);
+    setInfoMovie(info);
   };
 
   const onChangeCategory = (selectedOptions) => {
@@ -83,9 +90,11 @@ const EditMovie = () => {
                         Title
                       </SoftTypography>
                     </SoftBox>
-                    <SoftInput
+                    <input
                       id="title"
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                       placeholder="Title"
+                      // value={infoMovie.titile}
                       {...register("title", { required: true })}
                     />
                     {errors.title && (

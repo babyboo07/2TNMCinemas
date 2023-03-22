@@ -1,6 +1,6 @@
 import { Card } from "@mui/material";
 import { getMoviesById } from "API/movies/movie";
-import { URL } from "AppConstants";
+import { URL_IMG } from "AppConstants";
 import SoftBox from "components/SoftBox";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -91,7 +91,7 @@ const DetailMovie = () => {
                 <div>
                   <div className="flex pt-3">
                     <span className="pr-3 text-base font-medium">Thumnail:</span>
-                    <img src={URL + movieInfo?.thumail} alt="img title" />
+                    <img src={URL_IMG + movieInfo?.thumail} alt="img title" />
                   </div>
                 </div>
               </div>

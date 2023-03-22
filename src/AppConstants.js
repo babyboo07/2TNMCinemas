@@ -1,4 +1,5 @@
 export const URL = "http://localhost:8080/api";
+export const URL_IMG = "http://localhost:8080";
 
 export const ADMIN = 1;
 export const MEMBER = 2;

@@ -26,7 +26,7 @@ const Createnew = () => {
   const [listCate, setListCate] = useState([]);
   const [listcast, setListCast] = useState([]);
   const [userInfo, setUserInfo] = useState({});
-  const [currentFileName , setCurrentFileName] = useState("");
+  const [currentFileName, setCurrentFileName] = useState("");
 
   const {
     register,
@@ -40,8 +40,6 @@ const Createnew = () => {
     data.casts = listcast;
     data.movieCate = listCate;
     data.createById = userInfo.userId;
-    console.log(videoID);
-    console.log(data);
     saveMovies(data);
   };
 

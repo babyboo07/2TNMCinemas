@@ -45,6 +45,7 @@ import CreateRoom from "layouts/room/create";
 import UpdateRoom from "layouts/room/edit";
 import UpdateSeat from "layouts/seat/edit";
 import CreateSeat from "layouts/seat/create";
+import CreateMovieDay from "layouts/movieDay/create";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -163,6 +164,7 @@ export default function App() {
         <Route path="/room/edit/:roomId" element={<UpdateRoom />} />
         <Route path="/seat/create" element={<CreateSeat />} />
         <Route path="/seat/edit/:seatId" element={<UpdateSeat />} />
+        <Route path="/movie_day/create" element={<CreateMovieDay />} />
       </Routes>
     </ThemeProvider>
   );

@@ -20,6 +20,7 @@ export const ListCategory = async () => {
 export const ListParentCategory = async () => {
   try {
     return await axios.get(URL + `/admin/categories/parent`, config).then((res) => {
+      console.log(res.data);
       return res.data;
     });
   } catch (error) {

@@ -1,7 +1,9 @@
-import { Card, FormHelperText } from "@mui/material";
+import { Card } from "@mui/material";
 import { listCast } from "API/cast/cast";
 import { ListCategory } from "API/category/category";
 import { listDirector } from "API/director/director";
+import { UploadFileImage } from "API/movie/movie";
+import { saveMovies } from "API/movies/movie";
 import { getMoviesById } from "API/movies/movie";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
@@ -11,36 +13,27 @@ import { CustomListCast } from "layouts/utils/GetData";
 import { CustomListCategory } from "layouts/utils/GetData";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
-import Select from "react-select";
+import { Link, useParams } from "react-router-dom";
+import ReactSelect from "./react-select";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
 const EditMovie = () => {
-  const movieId = useParams();
-
+  const { handleSubmit } = useForm();
+  const { movieId } = useParams();
+  const [currentMovie, setCurrentMovie] = useState({});
   const [lstCategory, setListCategory] = useState([]);
   const [lstDirector, setLstDirector] = useState([]);
   const [lstCast, setLstCast] = useState([]);
   const [videoID, setVideoID] = useState();
   const [listCate, setListCate] = useState([]);
-  const [listcast, setListCast] = useState([]);
-  const [infoMovie, setInfoMovie] = useState();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = (data) => {
-    data.trailers = videoID;
-    data.cast = listcast;
-    data.movieCate = listCate;
-    console.log(videoID);
-    console.log(data);
-  };
+  const [currentCate, setCurrentCate] = useState([]);
+  const [currentCast, setCurrentCast] = useState([]);
+  const [casts, setCasts] = useState([]);
+  const [currentFileName, setCurrentFileName] = useState("");
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     fetchData();
@@ -48,242 +41,302 @@ const EditMovie = () => {
 
   const fetchData = async () => {
     const list = await ListCategory();
-    const customList = CustomListCategory(list);
-    setListCategory(customList);
-
     const listDir = await listDirector();
-    setLstDirector(listDir);
-
     const castList = await listCast();
-    const customlistCast = CustomListCast(castList);
-    setLstCast(customlistCast);
+    const currentData = await getMoviesById(movieId);
+    const customList = CustomListCategory(list);
+    const lstCurrentCate = CustomListCategory(currentData.movieCate);
+    const customListCast = CustomListCast(castList);
+    const lstCurrentCast = CustomListCast(currentData.casts);
+    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
 
-    const info = await getMoviesById(movieId.movieId);
-    setInfoMovie(info);
+    if (user) {
+      const dataUser = JSON.parse(user);
+      setUserInfo(dataUser);
+    }
+    // console.log(currentData);
+    setCurrentMovie(currentData);
+    setCurrentCast(lstCurrentCast);
+    setCurrentCate(lstCurrentCate);
+    setListCategory(customList);
+    setLstDirector(listDir);
+    setLstCast(customListCast);
   };
 
   const onChangeCategory = (selectedOptions) => {
     setListCate(selectedOptions);
-    console.log(selectedOptions);
   };
 
   const onChangeCast = (selectedOptions) => {
-    setListCast(selectedOptions);
-    console.log(selectedOptions);
+    setCasts(selectedOptions);
   };
+
   const handleChange = (e) => {
     setVideoID(e.target.value.substring(e.target.value.search("=") + 1, e.target.value.length));
   };
 
+  const handleOnchangeFile = async (e) => {
+    const form_data = new FormData();
+    const files = e.target.files;
+
+    form_data.append("file", files[0]);
+    const fileName = await UploadFileImage(form_data);
+
+    setCurrentFileName(fileName);
+  };
+
+  const onSubmit = () => {
+    var movieUpdate = {
+      id: currentMovie.id,
+      titile: currentMovie.titile,
+      description: currentMovie.description,
+      thumail: currentFileName != null ? currentFileName : currentMovie.thumail,
+      trailer: videoID != null ? videoID : currentMovie.trailer,
+      casts: casts.length > 0 ? casts : currentCast,
+      movieCate: listCate.length > 0 ? listCate : currentCate,
+      startNumber: currentMovie.startNumber,
+      runningTime: currentMovie.runningTime,
+      releaseDate: currentMovie.releaseDate,
+      rated: currentMovie.rated,
+      createById: userInfo.userId,
+      directorId: currentMovie.directorId,
+    };
+
+    saveMovies(movieUpdate);
+  };
+
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <SoftBox py={3}>
-        <SoftBox mb={3}>
-          <Card>
-            <SoftBox onSubmit={handleSubmit(onSubmit)} component="form" role="form" p={2}>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Title
-                      </SoftTypography>
-                    </SoftBox>
-                    <input
-                      id="title"
-                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                      placeholder="Title"
-                      // value={infoMovie.titile}
-                      {...register("title", { required: true })}
-                    />
-                    {errors.title && (
-                      <FormHelperText error id="component-error-text">
-                        Title is required
-                      </FormHelperText>
-                    )}
-                  </SoftBox>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Desciption
-                      </SoftTypography>
-                    </SoftBox>
-                    <SoftInput
-                      id="desciption"
-                      placeholder="Desciption"
-                      {...register("desciption", { required: true })}
-                    />
-                    {errors.desciption && (
-                      <FormHelperText error id="component-error-text">
-                        Desciption is required
-                      </FormHelperText>
-                    )}
-                  </SoftBox>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Thumnail
-                      </SoftTypography>
-                    </SoftBox>
-                    <SoftInput id="thumnail" type="file" {...register("thumnail")} />
-                  </SoftBox>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Trailers
-                      </SoftTypography>
-                      <input
-                        type="text"
-                        onChange={handleChange}
-                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                        id="trailers"
-                        placeholder="Link youtube"
-                      />
-                    </SoftBox>
-                  </SoftBox>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Rated
-                      </SoftTypography>
-                      <input
-                        type="text"
-                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                        id="rated"
-                        placeholder="Rated"
-                        {...register("rated", { required: true })}
-                      />
-                      {errors.rated && (
-                        <FormHelperText error id="component-error-text">
-                          Rated is required
-                        </FormHelperText>
-                      )}
-                    </SoftBox>
-                  </SoftBox>
-                </div>
-                <div>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Director
-                      </SoftTypography>
-                    </SoftBox>
-                    <select
-                      id="director"
-                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
-                      classNamePrefix="select"
-                      {...register("director", { required: true })}
-                    >
-                      <option value={""}>Select</option>
-                      {lstDirector.length > 0 &&
-                        lstDirector.map((d) => (
-                          <option key={d.directorId} value={d.directorId}>
-                            {d.directorName}
-                          </option>
-                        ))}
-                    </select>
-                    {errors.director && (
-                      <FormHelperText error id="component-error-text">
-                        Director is required
-                      </FormHelperText>
-                    )}
-                  </SoftBox>
-                  <SoftBox mb={2}>
-                    <SoftBox mb={1} ml={0.5}>
-                      <SoftTypography component="label" variant="caption" fontWeight="bold">
-                        Category
-                      </SoftTypography>
-                    </SoftBox>
-                    <Select
-                      className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full "
-                      isMulti
-                      name="category"
-                      options={lstCategory}
-                      classNamePrefix="select"
-                      onChange={onChangeCategory}
-                    />
-                  </SoftBox>
-                  <div className="grid grid-cols-2 gap-2">
+    <div>
+      {currentMovie && currentCast.length > 0 && currentCate.length > 0 && (
+        <DashboardLayout>
+          <DashboardNavbar />
+          <SoftBox py={3}>
+            <SoftBox mb={3}>
+              <Card>
+                <SoftBox onSubmit={handleSubmit(onSubmit)} component="form" role="form" p={2}>
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <SoftBox mb={2}>
                         <SoftBox mb={1} ml={0.5}>
                           <SoftTypography component="label" variant="caption" fontWeight="bold">
-                            Hot
+                            Title
+                          </SoftTypography>
+                        </SoftBox>
+
+                        <input
+                          className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                          type={"text"}
+                          value={currentMovie.titile}
+                          onChange={(e) =>
+                            setCurrentMovie({ ...currentMovie, titile: e.target.value })
+                          }
+                          required
+                        />
+                      </SoftBox>
+                      <SoftBox mb={2}>
+                        <SoftBox mb={1} ml={0.5}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold">
+                            Desciption
+                          </SoftTypography>
+                        </SoftBox>
+                        <input
+                          type={"description"}
+                          value={currentMovie.description ?? ""}
+                          className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                          onChange={(e) =>
+                            setCurrentMovie({ ...currentMovie, description: e.target.value })
+                          }
+                          required
+                        />
+                      </SoftBox>
+                      <SoftBox mb={2}>
+                        <SoftBox mb={1} ml={0.5}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold">
+                            Thumnail
+                          </SoftTypography>
+                        </SoftBox>
+                        <SoftInput id="thumail" type="file" onChange={handleOnchangeFile} />
+                      </SoftBox>
+                      <SoftBox mb={2}>
+                        <SoftBox mb={1} ml={0.5}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold">
+                            Trailers
+                          </SoftTypography>
+                          <input
+                            type="text"
+                            onChange={handleChange}
+                            className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                            id="trailers"
+                            placeholder="Link youtube"
+                            required
+                          />
+                        </SoftBox>
+                      </SoftBox>
+                      <SoftBox mb={2}>
+                        <SoftBox mb={1} ml={0.5}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold">
+                            Rated
+                          </SoftTypography>
+                          <input
+                            type="text"
+                            className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                            id="rated"
+                            placeholder="Rated"
+                            value={currentMovie.rated}
+                            onChange={(e) =>
+                              setCurrentMovie({ ...currentMovie, rated: e.target.value })
+                            }
+                            required
+                          />
+                        </SoftBox>
+                      </SoftBox>
+                    </div>
+                    <div>
+                      <SoftBox mb={2}>
+                        <SoftBox mb={1} ml={0.5}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold">
+                            Director
                           </SoftTypography>
                         </SoftBox>
                         <select
-                          className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
-                          {...register("hot")}
+                          id="director"
+                          className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5"
+                          classNamePrefix="select"
+                          value={currentMovie.directorId}
+                          required
                         >
-                          <option value="">Select...</option>
-                          <option value="1">Hot</option>
-                          <option value="0">Normal</option>
+                          <option value={""}>Select</option>
+                          {lstDirector.length > 0 &&
+                            lstDirector.map((d) => (
+                              <option key={d.directorId} value={d.directorId}>
+                                {d.directorName}
+                              </option>
+                            ))}
                         </select>
                       </SoftBox>
-                    </div>
-                    <div>
                       <SoftBox mb={2}>
                         <SoftBox mb={1} ml={0.5}>
                           <SoftTypography component="label" variant="caption" fontWeight="bold">
-                            Cast
+                            Category
                           </SoftTypography>
                         </SoftBox>
-                        <Select
+
+                        <ReactSelect
+                          options={lstCategory}
+                          defaultValue={currentCate}
+                          handleOnChange={onChangeCategory}
+                        />
+                        {/* <Select
+                      className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full "
+                      isMulti
+                      name="category"
+                      defaultValue={currentCate}
+                      options={lstCategory}
+                      classNamePrefix="select"
+                      onChange={onChangeCategory}
+                    /> */}
+                      </SoftBox>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <SoftBox mb={2}>
+                            <SoftBox mb={1} ml={0.5}>
+                              <SoftTypography component="label" variant="caption" fontWeight="bold">
+                                Hot
+                              </SoftTypography>
+                            </SoftBox>
+                            <select
+                              className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                              value={currentMovie.startNumber}
+                              required
+                            >
+                              <option value="">Select...</option>
+                              <option value="1">Hot</option>
+                              <option value="0">Normal</option>
+                            </select>
+                          </SoftBox>
+                        </div>
+                        <div>
+                          <SoftBox mb={2}>
+                            <SoftBox mb={1} ml={0.5}>
+                              <SoftTypography component="label" variant="caption" fontWeight="bold">
+                                Cast
+                              </SoftTypography>
+                            </SoftBox>
+                            <ReactSelect
+                              options={lstCast}
+                              defaultValue={currentCast}
+                              handleOnChange={onChangeCast}
+                            />
+                            {/* <Select
                           className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full"
                           name="cast"
                           isMulti
+                          defaultValue={currentCast}
                           options={lstCast}
                           classNamePrefix="select"
                           onChange={onChangeCast}
-                        />
-                      </SoftBox>
+                        /> */}
+                          </SoftBox>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <SoftBox mb={2}>
+                            <SoftBox mb={1} ml={0.5}>
+                              <SoftTypography component="label" variant="caption" fontWeight="bold">
+                                Running Time
+                              </SoftTypography>
+                            </SoftBox>
+                            <input
+                              type={"text"}
+                              value={currentMovie.runningTime ?? ""}
+                              className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                              onChange={(e) =>
+                                setCurrentMovie({ ...currentMovie, runningTime: e.target.value })
+                              }
+                              required
+                            />
+                          </SoftBox>
+                        </div>
+                        <div>
+                          <SoftBox mb={2}>
+                            <SoftBox mb={1} ml={0.5}>
+                              <SoftTypography component="label" variant="caption" fontWeight="bold">
+                                Release Date
+                              </SoftTypography>
+                            </SoftBox>
+                            <input
+                              type="date"
+                              className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                              value={currentMovie?.releaseDate}
+                              onChange={(date) =>
+                                setCurrentMovie({ ...currentMovie, releaseDate: date.target.value })
+                              }
+                              required
+                            />
+                          </SoftBox>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <SoftBox mb={2}>
-                        <SoftBox mb={1} ml={0.5}>
-                          <SoftTypography component="label" variant="caption" fontWeight="bold">
-                            Running Time
-                          </SoftTypography>
-                        </SoftBox>
-                        <SoftInput
-                          id="runningTime"
-                          placeholder="Running Time"
-                          {...register("runningTime", { required: true })}
-                        />
-                        {errors.runningTime && (
-                          <FormHelperText error id="component-error-text">
-                            Running Time is required
-                          </FormHelperText>
-                        )}
-                      </SoftBox>
-                    </div>
-                    <div>
-                      <SoftBox mb={2}>
-                        <SoftBox mb={1} ml={0.5}>
-                          <SoftTypography component="label" variant="caption" fontWeight="bold">
-                            Release Date
-                          </SoftTypography>
-                        </SoftBox>
-                        <SoftInput type="date" id="releaseDate" {...register("releaseDate")} />
-                      </SoftBox>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <SoftBox mt={4} mb={1}>
-                <SoftButton type="submit" variant="gradient" color="info">
-                  Create
-                </SoftButton>
-              </SoftBox>
+                  <SoftBox mt={4} mb={1}>
+                    <SoftButton type="submit" variant="gradient" color="info">
+                      Update
+                    </SoftButton>
+                    <Link to="/movies" className="ml-4">
+                      <SoftButton variant="gradient" color="secondary">
+                        Back to List
+                      </SoftButton>
+                    </Link>
+                  </SoftBox>
+                </SoftBox>
+              </Card>
             </SoftBox>
-          </Card>
-        </SoftBox>
-      </SoftBox>
-      <Footer />
-    </DashboardLayout>
+          </SoftBox>
+          <Footer />
+        </DashboardLayout>
+      )}
+    </div>
   );
 };
 

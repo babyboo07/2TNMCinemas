@@ -10,6 +10,7 @@ import { listMovies } from "API/movies/movie";
 import SoftButton from "components/SoftButton";
 import Footer from "examples/Footer";
 import { saveMovieDay } from "API/movieDay/movieDay";
+import { listRoom } from "API/room/room";
 export default function CreateMovieDay() {
   const {
     register,
@@ -18,6 +19,7 @@ export default function CreateMovieDay() {
   } = useForm();
 
   const [movies, setMovies] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -25,6 +27,10 @@ export default function CreateMovieDay() {
 
   const fetchData = async () => {
     const movieData = await listMovies();
+    const roomData = await listRoom();
+    if (roomData) {
+      setRooms(roomData);
+    }
     if (movieData) {
       setMovies(movieData);
     }
@@ -64,6 +70,30 @@ export default function CreateMovieDay() {
                     {errors.movieId && (
                       <FormHelperText error id="component-error-text">
                         Movie is required
+                      </FormHelperText>
+                    )}
+                  </SoftBox>
+                  <SoftBox mb={2}>
+                    <SoftBox mb={1} ml={0.5}>
+                      <SoftTypography component="label" variant="caption" fontWeight="bold">
+                        Room
+                      </SoftTypography>
+                    </SoftBox>
+                    <select
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
+                      {...register("roomId", { required: true })}
+                    >
+                      <option value="">Select...</option>
+                      {rooms.length > 0 &&
+                        rooms.map((room) => (
+                          <option key={room.roomId} value={room.roomId}>
+                            {room.roomName}
+                          </option>
+                        ))}
+                    </select>
+                    {errors.roomId && (
+                      <FormHelperText error id="component-error-text">
+                        Room is required
                       </FormHelperText>
                     )}
                   </SoftBox>

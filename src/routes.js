@@ -36,6 +36,7 @@ import TablesDirector from "layouts/director";
 import TablesRoom from "layouts/room";
 import TablesSeat from "layouts/seat";
 import TableMovieDay from "layouts/movieDay";
+import TableBookingDepot from "layouts/Booking";
 
 const routes = [
   {
@@ -117,6 +118,16 @@ const routes = [
     route: "/movieDay",
     icon: <Office size="12px" />,
     component: <TableMovieDay />,
+    noCollapse: true,
+  },
+  
+  {
+    type: "collapse",
+    name: "Booking Depot",
+    key: "bookings",
+    route: "/bookings",
+    icon: <Office size="12px" />,
+    component: <TableBookingDepot />,
     noCollapse: true,
   },
   // { type: "title", title: "Account Pages", key: "account-pages" },

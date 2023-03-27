@@ -1,7 +1,6 @@
 import { Card } from "@mui/material";
 import { listMovieBooking } from "API/booking/bookings";
 import SoftBox from "components/SoftBox";
-import SoftButton from "components/SoftButton";
 import SoftTypography from "components/SoftTypography";
 import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -15,15 +14,15 @@ export default function TableBookingDepot() {
 
   useEffect(() => {
     fetchData();
-  }, [])
+  }, []);
 
   const fetchData = async () => {
     const bookingData = await listMovieBooking();
 
-    if(bookingData){
+    if (bookingData) {
       setBookings(bookingData);
     }
-  }
+  };
 
   return (
     <DashboardLayout>
@@ -31,14 +30,9 @@ export default function TableBookingDepot() {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
-            {/* <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-            <SoftTypography variant="h6">Cast Table</SoftTypography>
-            <Link to={"/cast/create"}>
-              <SoftButton variant="gradient" color="info">
-                Create New
-              </SoftButton>
-            </Link>
-          </SoftBox> */}
+            <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
+              <SoftTypography variant="h6">Booking Table</SoftTypography>
+            </SoftBox>
             <SoftBox
               sx={{
                 "& .MuiTableRow-root:not(:last-child)": {
@@ -54,7 +48,7 @@ export default function TableBookingDepot() {
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-6 py-3">
-                        Order By 
+                        Order By
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Movie Name

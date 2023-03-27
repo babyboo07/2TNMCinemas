@@ -168,7 +168,6 @@ const EditMovie = () => {
                             className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                             id="trailers"
                             placeholder="Link youtube"
-                            value={"https://www.youtube.com/watch?v="+currentMovie.trailer}
                             required
                           />
                         </SoftBox>
@@ -248,6 +247,9 @@ const EditMovie = () => {
                             <select
                               className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                               value={currentMovie.startNumber}
+                              onChange={(e) =>
+                                setCurrentMovie({ ...currentMovie, startNumber: e.target.value })
+                              }
                               required
                             >
                               <option value="">Select...</option>

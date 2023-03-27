@@ -1,4 +1,5 @@
 import { Card } from "@mui/material";
+import { approveBooking } from "API/booking/bookings";
 import { listMovieBooking } from "API/booking/bookings";
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
@@ -7,7 +8,6 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 
 export default function TableBookingDepot() {
   const [bookings, setBookings] = useState([]);
@@ -22,6 +22,10 @@ export default function TableBookingDepot() {
     if (bookingData) {
       setBookings(bookingData);
     }
+  };
+
+  const approveBookingDepot = (id) => {
+    approveBooking(id);
   };
 
   return (
@@ -69,6 +73,9 @@ export default function TableBookingDepot() {
                         Show Time
                       </th>
                       <th scope="col" className="px-6 py-3">
+                        Status
+                      </th>
+                      <th scope="col" className="px-6 py-3">
                         Action
                       </th>
                     </tr>
@@ -85,19 +92,32 @@ export default function TableBookingDepot() {
                           <td className="px-6 py-4">{c.showDate}</td>
                           <td className="px-6 py-4">{c.showTime}</td>
                           <td className="px-6 py-4">
-                            <div className="flex items-center">
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <button type="button" className="font-medium text-white uppercase">
-                                  Approve
-                                </button>
-                              </div>
-                            </div>
+                            {c.status === 1 ? (
+                              <span className="text-green-500">In Process</span>
+                            ) : (
+                              <span className="text-red-300">Approve</span>
+                            )}
                           </td>
+                          {c.status !== 2 && (
+                            <td className="px-6 py-4">
+                              <div className="flex items-center">
+                                <div
+                                  data-te-chip-init
+                                  data-te-ripple-init
+                                  className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                  data-te-close="true"
+                                >
+                                  <button
+                                    type="button"
+                                    onClick={() => approveBookingDepot(c.bookingId)}
+                                    className="font-medium text-white uppercase"
+                                  >
+                                    Approve
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
+                          )}
                         </tr>
                       ))}
                   </tbody>

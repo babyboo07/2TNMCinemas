@@ -17,3 +17,14 @@ export const listMovieBooking = () => {
     console.log(error);
   }
 };
+
+export const approveBooking = (id ) => {
+  try {
+    return axios.get(URL + `/admin/booking/approve/`+ id, config).then((res) => {
+      window.location.href = "/bookings";
+      return res.data;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}

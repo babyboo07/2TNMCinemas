@@ -168,7 +168,6 @@ const EditMovie = () => {
                             className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full p-2.5 "
                             id="trailers"
                             placeholder="Link youtube"
-                            required
                           />
                         </SoftBox>
                       </SoftBox>
@@ -226,15 +225,6 @@ const EditMovie = () => {
                           defaultValue={currentCate}
                           handleOnChange={onChangeCategory}
                         />
-                        {/* <Select
-                      className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full "
-                      isMulti
-                      name="category"
-                      defaultValue={currentCate}
-                      options={lstCategory}
-                      classNamePrefix="select"
-                      onChange={onChangeCategory}
-                    /> */}
                       </SoftBox>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
@@ -270,15 +260,6 @@ const EditMovie = () => {
                               defaultValue={currentCast}
                               handleOnChange={onChangeCast}
                             />
-                            {/* <Select
-                          className="border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-full"
-                          name="cast"
-                          isMulti
-                          defaultValue={currentCast}
-                          options={lstCast}
-                          classNamePrefix="select"
-                          onChange={onChangeCast}
-                        /> */}
                           </SoftBox>
                         </div>
                       </div>

@@ -17,11 +17,17 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { deleteCastById } from "API/cast/cast";
+import PagingList from "layouts/utils/Pagination";
 
 export default function TablesCast() {
   const [casts, setCasts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [castId, setCastId] = useState();
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -31,6 +37,32 @@ export default function TablesCast() {
     const list = await listCast();
     setCasts(list);
   };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(casts.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(casts.length / itemsPerPage));
+  }, [casts]);
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(casts.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(casts.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % casts.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
+  };
+
 
   const confirmModal = (id) => {
     setShowModal(true);
@@ -78,8 +110,8 @@ export default function TablesCast() {
                     </tr>
                   </thead>
                   <tbody>
-                    {casts.length > 0 &&
-                      casts.map((c) => (
+                    {paginatedItems.length > 0 &&
+                      paginatedItems.map((c) => (
                         <tr key={c.castId} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{c.castName}</td>
                           <td className="px-6 py-4">
@@ -112,6 +144,15 @@ export default function TablesCast() {
                       ))}
                   </tbody>
                 </table>
+                {casts.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={casts}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

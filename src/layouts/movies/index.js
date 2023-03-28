@@ -15,10 +15,16 @@ import SoftButton from "components/SoftButton";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { listMovies } from "API/movies/movie";
+import PagingList from "layouts/utils/Pagination";
 
 function Tables() {
   const [listMovie, setListMovie] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -28,6 +34,32 @@ function Tables() {
     const list = await listMovies();
     setListMovie(list);
   };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(listMovie.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(listMovie.length / itemsPerPage));
+  }, [listMovie]);
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(listMovie.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(listMovie.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % listMovie.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -77,8 +109,8 @@ function Tables() {
                     </tr>
                   </thead>
                   <tbody>
-                    {listMovie.length > 0 &&
-                      listMovie.map((m) => (
+                    {paginatedItems.length > 0 &&
+                      paginatedItems.map((m) => (
                         <tr key={m.id} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{m.titile}</td>
                           <td className="px-6 py-4">{m.directorName}</td>
@@ -114,6 +146,15 @@ function Tables() {
                     ;
                   </tbody>
                 </table>
+                {listMovie.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={listMovie}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

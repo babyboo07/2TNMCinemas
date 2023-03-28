@@ -15,14 +15,19 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { deleteDirectorById } from "API/director/director";
 import { listRoom } from "API/room/room";
 import { deleteRoomById } from "API/room/room";
+import PagingList from "layouts/utils/Pagination";
 
 export default function TablesRoom() {
   const [room, setRoom] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [id, setId] = useState();
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -31,6 +36,31 @@ export default function TablesRoom() {
   const fetchData = async () => {
     const list = await listRoom();
     setRoom(list);
+  };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(room.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(room.length / itemsPerPage));
+  }, [room]);
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(room.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(room.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % room.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
   };
 
   const confirmModal = (id) => {
@@ -79,8 +109,8 @@ export default function TablesRoom() {
                     </tr>
                   </thead>
                   <tbody>
-                    {room.length > 0 &&
-                      room.map((r) => (
+                    {paginatedItems.length > 0 &&
+                      paginatedItems.map((r) => (
                         <tr key={r.roomId} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{r.roomName}</td>
                           <td className="px-6 py-4">
@@ -113,6 +143,15 @@ export default function TablesRoom() {
                       ))}
                   </tbody>
                 </table>
+                {room.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={room}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

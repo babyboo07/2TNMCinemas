@@ -29,7 +29,6 @@ export default function CreateCategory() {
 
   const fetchData = async () => {
     const lstCate = await ListParentCategory();
-
     const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
     var decoded = jwt_decode(token);
 

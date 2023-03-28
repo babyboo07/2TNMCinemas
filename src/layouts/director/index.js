@@ -18,11 +18,17 @@ import { listDirector } from "API/director/director";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { deleteDirectorById } from "API/director/director";
+import PagingList from "layouts/utils/Pagination";
 
 export default function TablesDirector() {
   const [director, setDirector] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [id, setId] = useState();
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -31,6 +37,30 @@ export default function TablesDirector() {
   const fetchData = async () => {
     const list = await listDirector();
     setDirector(list);
+  };
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(director.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(director.length / itemsPerPage));
+  }, [director]);
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(director.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(director.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % director.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
   };
 
   const confirmModal = (id) => {
@@ -113,6 +143,15 @@ export default function TablesDirector() {
                       ))}
                   </tbody>
                 </table>
+                {director.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={director}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

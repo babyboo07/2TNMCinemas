@@ -20,10 +20,16 @@ import { ADMIN } from "AppConstants";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+import PagingList from "layouts/utils/Pagination";
 
 function TablesUser() {
   const [listMember, setListMember] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -32,6 +38,31 @@ function TablesUser() {
   const fetchData = async () => {
     const list = await listUser();
     setListMember(list);
+  };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(listMember.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(listMember.length / itemsPerPage));
+  }, [listMember]);
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(listMember.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(listMember.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % listMember.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
   };
 
   const confirmModal = (id) => {
@@ -87,8 +118,8 @@ function TablesUser() {
                     </tr>
                   </thead>
                   <tbody>
-                    {listMember.length > 0 &&
-                      listMember.map((u) => (
+                    {paginatedItems.length > 0 &&
+                      paginatedItems.map((u) => (
                         <tr key={u.userId} className="bg-white border-b hover:bg-gray-50">
                           <th
                             scope="row"
@@ -157,6 +188,15 @@ function TablesUser() {
                       ))}
                   </tbody>
                 </table>
+                {listMember.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={listMember}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

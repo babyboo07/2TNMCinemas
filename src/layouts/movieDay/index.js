@@ -7,12 +7,17 @@ import SoftTypography from "components/SoftTypography";
 import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import PagingList from "layouts/utils/Pagination";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function TableMovieDay() {
   const [lstMovieDay, setLstMovieDay] = useState([]);
-
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
   useEffect(() => {
     fetchData();
   }, []);
@@ -22,6 +27,31 @@ export default function TableMovieDay() {
     if (data) {
       setLstMovieDay(data);
     }
+  };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(lstMovieDay.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(lstMovieDay.length / itemsPerPage));
+  }, [lstMovieDay]);
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(lstMovieDay.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(lstMovieDay.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % lstMovieDay.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
   };
 
   const handleDelete = (id) => {
@@ -52,7 +82,7 @@ export default function TableMovieDay() {
                 },
               }}
             >
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+              <div className="relative  shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -74,8 +104,8 @@ export default function TableMovieDay() {
                     </tr>
                   </thead>
                   <tbody>
-                    {lstMovieDay.length > 0 &&
-                      lstMovieDay.map((movieDay) => (
+                    {paginatedItems.length > 0 &&
+                      paginatedItems.map((movieDay) => (
                         <tr key={movieDay.id} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{movieDay.movieRes.titile}</td>
                           <td className="px-6 py-4">{movieDay.showDate}</td>
@@ -97,6 +127,15 @@ export default function TableMovieDay() {
                       ))}
                   </tbody>
                 </table>
+                {lstMovieDay.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={lstMovieDay}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

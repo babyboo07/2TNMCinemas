@@ -9,9 +9,15 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
+import PagingList from "layouts/utils/Pagination";
 
 export default function TableBookingDepot() {
   const [bookings, setBookings] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -22,11 +28,35 @@ export default function TableBookingDepot() {
     const user = localStorage.getItem("token") ? localStorage.getItem("token") : "";
     var decoded = jwt_decode(user);
     console.log(decoded);
-    
 
     if (bookingData) {
       setBookings(bookingData);
     }
+  };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(bookings.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(bookings.length / itemsPerPage));
+  }, [bookings]);
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(bookings.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(bookings.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % bookings.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
   };
 
   const approveBookingDepot = (id) => {
@@ -86,8 +116,8 @@ export default function TableBookingDepot() {
                     </tr>
                   </thead>
                   <tbody>
-                    {bookings.length > 0 &&
-                      bookings.map((c) => (
+                    {paginatedItems.length > 0 &&
+                      paginatedItems.map((c) => (
                         <tr key={c.bookingId} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{c.email}</td>
                           <td className="px-6 py-4">{c.movieName}</td>
@@ -127,6 +157,15 @@ export default function TableBookingDepot() {
                       ))}
                   </tbody>
                 </table>
+                {bookings.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={bookings}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

@@ -15,9 +15,15 @@ import SoftButton from "components/SoftButton";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ListCategory } from "API/category/category";
+import PagingList from "layouts/utils/Pagination";
 
 export default function TablesCategory() {
   const [lstCategory, setListCategory] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageFocus, setPageFocus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -27,7 +33,30 @@ export default function TablesCategory() {
     const list = await ListCategory();
     setListCategory(list);
   };
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(lstCategory.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(lstCategory.length / itemsPerPage));
+  }, [lstCategory]);
 
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(lstCategory.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(lstCategory.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, pageFocus]);
+
+  const handleChangeItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setItemOffset(0);
+    setPageFocus(0);
+  };
+
+  const handlePageChange = (event) => {
+    let newOffset = (event.selected * itemsPerPage) % lstCategory.length;
+
+    setItemOffset(newOffset);
+    setPageFocus(event.selected);
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -74,8 +103,8 @@ export default function TablesCategory() {
                     </tr>
                   </thead>
                   <tbody>
-                    {lstCategory.length > 0 &&
-                      lstCategory.map((cate) => (
+                    {paginatedItems.length > 0 &&
+                      paginatedItems.map((cate) => (
                         <tr key={cate.categoryId} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{cate.categoryName}</td>
                           <td className="px-6 py-4">{cate.parentCateName}</td>
@@ -107,6 +136,15 @@ export default function TablesCategory() {
                       ))}
                   </tbody>
                 </table>
+                {lstCategory.length > 0 && (
+                  <PagingList
+                    handleChangeItemsPerPage={handleChangeItemsPerPage}
+                    handlePageChange={handlePageChange}
+                    item={lstCategory}
+                    pageCount={pageCount}
+                    pageFocus={pageFocus}
+                  />
+                )}
               </div>
             </SoftBox>
           </Card>

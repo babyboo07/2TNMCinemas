@@ -8,6 +8,8 @@ import SoftTypography from "components/SoftTypography";
 import { CateForm } from "layouts/Init/initCate";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import { getUserInfoById } from "API/authentitication/auth";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -27,11 +29,14 @@ export default function UpdateCategory() {
   const fetchData = async () => {
     const cate = await GetCategoryById(cateId);
     const lstCate = await ListParentCategory();
-    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    const user = await getUserInfoById(decoded.sub);
     if (user) {
-      const dataUser = JSON.parse(user);
-      setUserInfo(dataUser);
+      setUserInfo(user);
     }
+
 
     if (cate) {
       setCurrentCate(cate);

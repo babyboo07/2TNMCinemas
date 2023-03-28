@@ -8,6 +8,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import jwt_decode from "jwt-decode";
 
 export default function TableBookingDepot() {
   const [bookings, setBookings] = useState([]);
@@ -18,6 +19,10 @@ export default function TableBookingDepot() {
 
   const fetchData = async () => {
     const bookingData = await listMovieBooking();
+    const user = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(user);
+    console.log(decoded);
+    
 
     if (bookingData) {
       setBookings(bookingData);
@@ -83,7 +88,7 @@ export default function TableBookingDepot() {
                   <tbody>
                     {bookings.length > 0 &&
                       bookings.map((c) => (
-                        <tr key={c.castId} className="bg-white border-b hover:bg-gray-50">
+                        <tr key={c.bookingId} className="bg-white border-b hover:bg-gray-50">
                           <td className="px-6 py-4">{c.email}</td>
                           <td className="px-6 py-4">{c.movieName}</td>
                           <td className="px-6 py-4">{c.roomName}</td>

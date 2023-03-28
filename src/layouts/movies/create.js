@@ -1,4 +1,5 @@
 import { Card, FormHelperText } from "@mui/material";
+import { getUserInfoById } from "API/authentitication/auth";
 import { listCast } from "API/cast/cast";
 import { ListCategory } from "API/category/category";
 import { listDirector } from "API/director/director";
@@ -13,6 +14,7 @@ import { CustomListCategory } from "layouts/utils/GetData";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
+import jwt_decode from "jwt-decode";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -59,10 +61,12 @@ const Createnew = () => {
     const customlistCast = CustomListCast(castList);
     setLstCast(customlistCast);
 
-    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    const user = await getUserInfoById(decoded.sub);
     if (user) {
-      const dataUser = JSON.parse(user);
-      setUserInfo(dataUser);
+      setUserInfo(user);
     }
   };
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+import jwt_decode from "jwt-decode";
 // react-router components
 import { useLocation, Link } from "react-router-dom";
 
@@ -43,6 +44,7 @@ import {
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
 import { handleLogout } from "API/authentitication/auth";
+import { getUserInfoById } from "API/authentitication/auth";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -60,13 +62,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     } else {
       setNavbarType("static");
     }
-
-    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
-    if (user) {
-      const dataUser = JSON.parse(user);
-      setUserInfo(dataUser);
-    }
-
+    fetchData();
     // A function that sets the transparent state of the navbar.
     function handleTransparentNavbar() {
       setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
@@ -84,6 +80,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
     // Remove event listener on cleanup
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
+
+  const fetchData = async () => {
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    const user = await getUserInfoById(decoded.sub);
+    if (user) {
+      setUserInfo(user);
+    }
+  };
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);

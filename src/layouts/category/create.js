@@ -1,4 +1,5 @@
 import { Card, FormHelperText } from "@mui/material";
+import { getUserInfoById } from "API/authentitication/auth";
 import { SaveCategory } from "API/category/category";
 import { ListParentCategory } from "API/category/category";
 import SoftBox from "components/SoftBox";
@@ -7,6 +8,7 @@ import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import jwt_decode from "jwt-decode";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -27,10 +29,13 @@ export default function CreateCategory() {
 
   const fetchData = async () => {
     const lstCate = await ListParentCategory();
-    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
+
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    const user = await getUserInfoById(decoded.sub);
     if (user) {
-      const dataUser = JSON.parse(user);
-      setUserInfo(dataUser);
+      setUserInfo(user);
     }
 
     if (lstCate) {

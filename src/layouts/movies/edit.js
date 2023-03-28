@@ -1,4 +1,5 @@
 import { Card } from "@mui/material";
+import { getUserInfoById } from "API/authentitication/auth";
 import { listCast } from "API/cast/cast";
 import { ListCategory } from "API/category/category";
 import { listDirector } from "API/director/director";
@@ -15,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
 import ReactSelect from "./react-select";
+import jwt_decode from "jwt-decode";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -48,11 +50,12 @@ const EditMovie = () => {
     const lstCurrentCate = CustomListCategory(currentData.movieCate);
     const customListCast = CustomListCast(castList);
     const lstCurrentCast = CustomListCast(currentData.casts);
-    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
 
+    const user = await getUserInfoById(decoded.sub);
     if (user) {
-      const dataUser = JSON.parse(user);
-      setUserInfo(dataUser);
+      setUserInfo(user);
     }
     // console.log(currentData);
     setCurrentMovie(currentData);

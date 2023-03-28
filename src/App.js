@@ -54,8 +54,6 @@ export default function App() {
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
-  const [userInfo, setUserInfo] = useState({});
-
   // Cache for the rtl
   useMemo(() => {
     const cacheRtl = createCache({
@@ -64,14 +62,6 @@ export default function App() {
     });
 
     setRtlCache(cacheRtl);
-  }, []);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
-    if (user) {
-      const dataUser = JSON.parse(user);
-      setUserInfo(dataUser);
-    }
   }, []);
 
   // Open sidenav when mouse enter on mini sidenav

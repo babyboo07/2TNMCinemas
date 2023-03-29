@@ -4,6 +4,7 @@ import Card from "@mui/material/Card";
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
+import SoftButton from "components/SoftButton";
 
 // Soft UI Dashboard React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -11,7 +12,6 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 // Data
-import SoftButton from "components/SoftButton";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { listUser } from "API/member/user";
@@ -94,8 +94,8 @@ function TablesUser() {
               }}
             >
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-3">
                         Name
@@ -170,19 +170,26 @@ function TablesUser() {
                           <td className="px-6 py-4">{u.phoneNumber}</td>
                           <td className="px-6 py-4">{u.address}</td>
                           <td className="px-6 py-4">
-                            <Link
-                              to={"/member/edit/" + u.userId}
-                              className="font-medium text-blue-600  hover:underline"
-                            >
-                              Edit user
-                            </Link>
-                            <button
-                              type="button"
-                              className="font-medium ml-2 text-green-600"
-                              onClick={() => confirmModal(u.userId)}
-                            >
-                              Up role
-                            </button>
+                            <div className="flex items-center">
+                              <div
+                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                              >
+                                <Link className="uppercase" to={"/member/edit/" + u.userId}>
+                                  Edit
+                                </Link>
+                              </div>
+                              <div
+                                className={`${"bg-rose-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                              >
+                                <button
+                                  className="uppercase"
+                                  type="button"
+                                  onClick={() => confirmModal(u.userId)}
+                                >
+                                  Up role
+                                </button>
+                              </div>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -225,7 +232,7 @@ function TablesUser() {
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
                   <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                    Are you sure to uprole this users?
+                    Are you sure to up role this users?
                   </p>
                 </div>
                 {/*footer*/}

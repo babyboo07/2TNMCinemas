@@ -18,6 +18,7 @@ function Footer() {
       justifyContent="space-between"
       alignItems="center"
       px={1.5}
+      className="absolute bottom-0"
     >
       <SoftBox
         display="flex"
@@ -34,8 +35,7 @@ function Footer() {
             favorite
           </Icon>
         </SoftBox>
-        by me&u
-        for a better web.
+        by me&u for a better web.
       </SoftBox>
       <SoftBox
         component="ul"
@@ -53,8 +53,7 @@ function Footer() {
             mt: 0,
           },
         })}
-      >
-      </SoftBox>
+      ></SoftBox>
     </SoftBox>
   );
 }

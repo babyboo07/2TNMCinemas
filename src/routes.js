@@ -37,8 +37,21 @@ import TablesRoom from "layouts/room";
 import TablesSeat from "layouts/seat";
 import TableMovieDay from "layouts/movieDay";
 import TableBookingDepot from "layouts/Booking";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChair,
+  faFilm,
+  faHouseChimney,
+  faMask,
+  faTicket,
+  faUserSecret,
+} from "@fortawesome/free-solid-svg-icons";
+import SpaceShip from "examples/Icons/SpaceShip";
+import Cube from "examples/Icons/Cube";
+import Basket from "examples/Icons/Basket";
 
 const routes = [
+  { type: "title", title: "Dashboard Pages", key: "dashboard-pages" },
   {
     type: "collapse",
     name: "Dashboard",
@@ -48,22 +61,24 @@ const routes = [
     component: <Dashboard />,
     noCollapse: true,
   },
-  {
-    type: "collapse",
-    name: "Movies",
-    key: "movies",
-    route: "/movies",
-    icon: <Office size="12px" />,
-    component: <Tables />,
-    noCollapse: true,
-  },
+  { type: "title", title: "Member Pages", key: "member-pages" },
   {
     type: "collapse",
     name: "Member",
     key: "member",
     route: "/member",
-    icon: <Office size="12px" />,
+    icon: <CustomerSupport size="12px" />,
     component: <TablesUser />,
+    noCollapse: true,
+  },
+  { type: "title", title: "Film Pages", key: "film-pages" },
+  {
+    type: "collapse",
+    name: "Movies",
+    key: "movies",
+    route: "/movies",
+    icon: <FontAwesomeIcon className="text-xs" icon={faFilm} />,
+    component: <Tables />,
     noCollapse: true,
   },
   {
@@ -71,7 +86,7 @@ const routes = [
     name: "Category",
     key: "category",
     route: "/category",
-    icon: <Office size="12px" />,
+    icon: <SpaceShip size="12px" />,
     component: <TablesCategory />,
     noCollapse: true,
   },
@@ -80,7 +95,7 @@ const routes = [
     name: "Cast",
     key: "cast",
     route: "/cast",
-    icon: <Office size="12px" />,
+    icon: <FontAwesomeIcon className="text-xs" icon={faMask} />,
     component: <TablesCast />,
     noCollapse: true,
   },
@@ -89,7 +104,7 @@ const routes = [
     name: "Director",
     key: "director",
     route: "/director",
-    icon: <Office size="12px" />,
+    icon: <FontAwesomeIcon className="text-xs" icon={faUserSecret} />,
     component: <TablesDirector />,
     noCollapse: true,
   },
@@ -98,7 +113,7 @@ const routes = [
     name: "Room",
     key: "room",
     route: "/room",
-    icon: <Office size="12px" />,
+    icon: <FontAwesomeIcon className="text-xs" icon={faHouseChimney} />,
     component: <TablesRoom />,
     noCollapse: true,
   },
@@ -107,7 +122,7 @@ const routes = [
     name: "Seat",
     key: "seat",
     route: "/seat",
-    icon: <Office size="12px" />,
+    icon: <FontAwesomeIcon className="text-xs" icon={faChair} />,
     component: <TablesSeat />,
     noCollapse: true,
   },
@@ -120,13 +135,13 @@ const routes = [
     component: <TableMovieDay />,
     noCollapse: true,
   },
-  
+  { type: "title", title: "Order Pages", key: "order-pages" },
   {
     type: "collapse",
     name: "Booking Depot",
     key: "bookings",
     route: "/bookings",
-    icon: <Office size="12px" />,
+    icon: <FontAwesomeIcon className="text-xs" icon={faTicket} />,
     component: <TableBookingDepot />,
     noCollapse: true,
   },

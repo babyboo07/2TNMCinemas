@@ -92,7 +92,7 @@ const DetailMovie = () => {
                     <span className="pr-3 text-base font-medium">Cast:</span>
                     {castNames.length > 0 &&
                       castNames.map((item) => (
-                        <div className="[word-wrap: break-word] mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-[#eceff1] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]">
+                        <div className="break-words mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-[#eceff1] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]">
                           {item.label}
                         </div>
                       ))}

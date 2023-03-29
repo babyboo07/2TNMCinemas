@@ -11,6 +11,7 @@ import SoftButton from "components/SoftButton";
 import Footer from "examples/Footer";
 import { saveMovieDay } from "API/movieDay/movieDay";
 import { listRoom } from "API/room/room";
+import { checkDuplicateMovieDay } from "API/movieDay/movieDay";
 export default function CreateMovieDay() {
   const {
     register,
@@ -20,6 +21,7 @@ export default function CreateMovieDay() {
 
   const [movies, setMovies] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -36,9 +38,13 @@ export default function CreateMovieDay() {
     }
   };
 
-  const onSubmitNewUser = (data) => {
-    saveMovieDay(data);
-    console.log(data);
+  const onSubmitNewUser = async (data) => {
+    const checkExist = await checkDuplicateMovieDay(data);
+    if (!checkExist) {
+      saveMovieDay(data);
+    } else {
+      setMessage(checkExist);
+    }
   };
   return (
     <DashboardLayout>
@@ -122,6 +128,11 @@ export default function CreateMovieDay() {
                         ShowTime is required
                       </FormHelperText>
                     )}
+                    {message && (
+                      <FormHelperText error id="component-error-text">
+                       Show Time is exist in show Date
+                      </FormHelperText>
+                    )}
                   </SoftBox>
                 </div>
 
@@ -137,6 +148,11 @@ export default function CreateMovieDay() {
                       id="showDate"
                       {...register("showDate", { required: true })}
                     />
+                    {errors.showDate && (
+                      <FormHelperText error id="component-error-text">
+                        Show Date is required
+                      </FormHelperText>
+                    )}
                   </SoftBox>
                 </div>
               </div>

@@ -24,6 +24,7 @@ import curved6 from "assets/images/curved-images/curved14.jpg";
 import { useForm } from "react-hook-form";
 import { handleRegister } from "API/authentitication/auth";
 import { VALIDATIONEMAIL } from "AppConstants";
+import { getUserInfoById } from "API/authentitication/auth";
 
 function SignUp() {
   const {
@@ -34,6 +35,7 @@ function SignUp() {
   const [agreement, setAgremment] = useState(true);
 
   const handleSetAgremment = () => setAgremment(!agreement);
+  const [message, setMessage] = useState("");
 
   const validationEmail = {
     ...register("email", {
@@ -42,9 +44,14 @@ function SignUp() {
     }),
   };
 
-  const onSubmitSignup = (data) => {
-    handleRegister(data);
-    console.log(data);
+  const onSubmitSignup = async (data) => {
+    const checkDuplicateUserName = await getUserInfoById(data.username);
+
+    if (!checkDuplicateUserName) {
+      handleRegister(data);
+    } else {
+      setMessage("username is exist");
+    }
   };
 
   return (
@@ -74,6 +81,11 @@ function SignUp() {
               {errors.username && (
                 <FormHelperText error id="component-error-text">
                   Username is required
+                </FormHelperText>
+              )}
+              {message && (
+                <FormHelperText error id="component-error-text">
+                  Username is exist
                 </FormHelperText>
               )}
             </SoftBox>

@@ -8,7 +8,7 @@ import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -217,6 +217,11 @@ const EditUser = () => {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Save
                 </SoftButton>
+                <Link to="/member" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

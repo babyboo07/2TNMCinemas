@@ -1,10 +1,12 @@
 import { Card, FormHelperText } from "@mui/material";
+import { getUserInfoById } from "API/authentitication/auth";
 import { createUser } from "API/member/user";
 import { VALIDATIONEMAIL } from "AppConstants";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
@@ -19,6 +21,8 @@ const CreateUser = () => {
     formState: { errors },
   } = useForm();
 
+  const [message, setMessage] = useState("");
+
   const validationEmail = {
     ...register("email", {
       required: true,
@@ -26,8 +30,14 @@ const CreateUser = () => {
     }),
   };
 
-  const onSubmitNewUser = (data) => {
-    createUser(data);
+  const onSubmitNewUser = async (data) => {
+    const checkDuplicateUserName = await getUserInfoById(data.username);
+
+    if (!checkDuplicateUserName) {
+      createUser(data);
+    } else {
+      setMessage("username is exist");
+    }
     console.log(data);
   };
   return (
@@ -53,6 +63,11 @@ const CreateUser = () => {
                     {errors.username && (
                       <FormHelperText error id="component-error-text">
                         Username is required
+                      </FormHelperText>
+                    )}
+                    {message && (
+                      <FormHelperText error id="component-error-text">
+                        Username is exist
                       </FormHelperText>
                     )}
                   </SoftBox>

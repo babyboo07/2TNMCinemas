@@ -1,6 +1,7 @@
 import { Card, FormHelperText } from "@mui/material";
 import { checkDuplicate } from "API/cast/cast";
 import { saveCast } from "API/cast/cast";
+import { UploadFileImageCast } from "API/movie/movie";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
@@ -21,8 +22,10 @@ export default function CreateCast() {
   } = useForm();
 
   const [message, setMessage] = useState("");
+  const [currentFileName, setCurrentFileName] = useState("");
 
   const onSubmitNewUser = async (data) => {
+    data["image"] = currentFileName;
     console.log(data);
     const checkExists = await checkDuplicate(data);
     console.log(checkExists);
@@ -31,6 +34,16 @@ export default function CreateCast() {
     } else {
       setMessage(checkExists);
     }
+  };
+
+  const handleOnchangeFile = async (e) => {
+    const form_data = new FormData();
+    const files = e.target.files;
+
+    form_data.append("file", files[0]);
+    const fileName = await UploadFileImageCast(form_data);
+
+    setCurrentFileName(fileName);
   };
 
   return (
@@ -63,6 +76,16 @@ export default function CreateCast() {
                         Cast Name is Existed
                       </FormHelperText>
                     )}
+                  </SoftBox>
+                </div>
+                <div>
+                  <SoftBox mb={2}>
+                  <SoftBox mb={1} ml={0.5}>
+                      <SoftTypography component="label" variant="caption" fontWeight="bold">
+                        Avatar
+                      </SoftTypography>
+                    </SoftBox>
+                    <SoftInput id="image" type="file" onChange={handleOnchangeFile} />
                   </SoftBox>
                 </div>
               </div>

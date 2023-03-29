@@ -9,6 +9,7 @@ import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
+import { UploadFileImageCast } from "API/movie/movie";
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
@@ -23,6 +24,7 @@ export default function UpdateCast() {
   const { castId } = useParams();
 
   const [cast, setCast] = useState({});
+  const [currentFileName, setCurrentFileName] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -38,7 +40,7 @@ export default function UpdateCast() {
   };
 
   const onSubmitNewUser = async (data) => {
-    console.log(cast);
+    cast['image'] = currentFileName;
     await saveCast(cast);
   };
 
@@ -47,6 +49,16 @@ export default function UpdateCast() {
 
     fields["castName"] = event.target.value;
     setCast(fields);
+  };
+
+  const handleOnchangeFile = async (e) => {
+    const form_data = new FormData();
+    const files = e.target.files;
+
+    form_data.append("file", files[0]);
+    const fileName = await UploadFileImageCast(form_data);
+
+    setCurrentFileName(fileName);
   };
 
   return (
@@ -72,10 +84,20 @@ export default function UpdateCast() {
                     />
                   </SoftBox>
                 </div>
+                <div>
+                  <SoftBox mb={2}>
+                    <SoftBox mb={1} ml={0.5}>
+                      <SoftTypography component="label" variant="caption" fontWeight="bold">
+                        Avatar
+                      </SoftTypography>
+                    </SoftBox>
+                    <SoftInput id="image" type="file" onChange={handleOnchangeFile} />
+                  </SoftBox>
+                </div>
               </div>
               <SoftBox mt={4} mb={1}>
                 <SoftButton type="submit" variant="gradient" color="info">
-                  Create
+                  Update
                 </SoftButton>
                 <Link to="/cast" className="ml-4">
                   <SoftButton variant="gradient" color="secondary">

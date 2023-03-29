@@ -30,6 +30,20 @@ const saveDirector = (data) => {
   }
 };
 
+export const checkDuplicateDir = (data) => {
+  try {
+    return axios.post(URL + "/admin/dir/checkDuplicate", data, config).then((res) => {
+      console.log(res.data);
+      if (res.status === 200) {
+        return res.data;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 const getDirectorbyId = (id) => {
   try {
     return axios.get(URL + "/admin/director/" + id, config).then((res) => {

@@ -8,7 +8,7 @@ import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
@@ -77,6 +77,11 @@ export default function UpdateCast() {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Create
                 </SoftButton>
+                <Link to="/cast" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

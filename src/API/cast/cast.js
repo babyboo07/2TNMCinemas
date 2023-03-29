@@ -20,8 +20,22 @@ const listCast = () => {
 const saveCast = (data) => {
   try {
     return axios.post(URL + "/admin/cast/save", data, config).then((res) => {
+      console.log(res.data);
       if (res.status === 200) {
         window.location.href = "/cast";
+        return res.data;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const checkDuplicate = (data) => {
+  try {
+    return axios.post(URL + "/admin/cast/checkDuplicate", data, config).then((res) => {
+      console.log(res.data);
+      if (res.status === 200) {
         return res.data;
       }
     });

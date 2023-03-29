@@ -7,7 +7,7 @@ import SoftButton from "components/SoftButton";
 import SoftTypography from "components/SoftTypography";
 import { CateForm } from "layouts/Init/initCate";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { getUserInfoById } from "API/authentitication/auth";
 
@@ -162,6 +162,11 @@ export default function UpdateCategory() {
                 <SoftButton variant="gradient" color="info" onClick={() => onSubmitNewUser()}>
                   Update
                 </SoftButton>
+                <Link to="/category" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

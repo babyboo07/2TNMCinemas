@@ -33,6 +33,21 @@ export const SaveCategory = async (data) => {
     return await axios.post(URL + `/admin/category/save`, data, config).then((res) => {
       if (res.status === 200) {
         window.location.href = "/category";
+      }else{
+        return res.data;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const checkDuplicateCategory = (data) => {
+  try {
+    return axios.post(URL + "/admin/cate/checkDuplicate", data, config).then((res) => {
+      console.log(res.data);
+      if (res.status === 200) {
+        return res.data;
       }
     });
   } catch (error) {

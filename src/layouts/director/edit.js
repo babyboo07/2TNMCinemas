@@ -5,7 +5,7 @@ import SoftButton from "components/SoftButton";
 import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getDirectorbyId } from "API/director/director";
 import { saveDirector } from "API/director/director";
 const { default: Footer } = require("examples/Footer");
@@ -71,6 +71,11 @@ export default function UpdateDirector() {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Save
                 </SoftButton>
+                <Link to="/director" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

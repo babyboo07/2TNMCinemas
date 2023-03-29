@@ -9,6 +9,8 @@ import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import jwt_decode from "jwt-decode";
+import { checkDuplicateCategory } from "API/category/category";
+import { Link } from "react-router-dom";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -23,6 +25,7 @@ export default function CreateCategory() {
 
   const [lstCateParent, setLstCateParent] = useState([]);
   const [userInfo, setUserInfo] = useState({});
+  const [message , setMessage] = useState("");
   useEffect(() => {
     fetchData();
   }, []);
@@ -44,7 +47,15 @@ export default function CreateCategory() {
 
   const onSubmitNewUser = async (data) => {
     data["createBy"] = userInfo.userId;
-    await SaveCategory(data);
+
+    const checkExist  = await checkDuplicateCategory(data);
+
+    if(!checkExist){
+      await SaveCategory(data);
+    }else{
+      setMessage(checkExist)
+    }
+
   };
 
   return (
@@ -70,6 +81,11 @@ export default function CreateCategory() {
                     {errors.categoryName && (
                       <FormHelperText error id="component-error-text">
                         Category Name is required
+                      </FormHelperText>
+                    )}
+                    {message && (
+                      <FormHelperText error id="component-error-text">
+                        Category Name is Existed
                       </FormHelperText>
                     )}
                   </SoftBox>
@@ -131,6 +147,11 @@ export default function CreateCategory() {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Create
                 </SoftButton>
+                <Link to="/category" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

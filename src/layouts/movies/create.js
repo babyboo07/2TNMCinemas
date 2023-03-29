@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
 import jwt_decode from "jwt-decode";
+import { Link } from "react-router-dom";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -293,6 +294,11 @@ const Createnew = () => {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Create
                 </SoftButton>
+                <Link to="/movies" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

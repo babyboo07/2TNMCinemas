@@ -6,6 +6,7 @@ import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -188,6 +189,11 @@ const CreateUser = () => {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Create
                 </SoftButton>
+                <Link to="/member" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

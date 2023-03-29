@@ -1,10 +1,13 @@
 import { Card, FormHelperText } from "@mui/material";
+import { checkDuplicateDir } from "API/director/director";
 import { saveDirector } from "API/director/director";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
@@ -17,9 +20,16 @@ export default function CreateDirector() {
     formState: { errors },
   } = useForm();
 
+  const [message , setMessage] = useState("");
+
   const onSubmitNewDirector = async (data) => {
     console.log(data);
-    await saveDirector(data);
+    const checkExist = await checkDuplicateDir(data);
+    if(!checkExist){
+      await saveDirector(data);
+    }else{
+      setMessage(checkExist)
+    }
   };
 
   return (
@@ -52,6 +62,11 @@ export default function CreateDirector() {
                         Director Name is required
                       </FormHelperText>
                     )}
+                    {message && (
+                      <FormHelperText error id="component-error-text">
+                        Director Name is Existed
+                      </FormHelperText>
+                    )}
                   </SoftBox>
                 </div>
               </div>
@@ -59,6 +74,11 @@ export default function CreateDirector() {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Create
                 </SoftButton>
+                <Link to="/director" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

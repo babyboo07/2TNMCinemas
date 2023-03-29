@@ -5,7 +5,7 @@ import SoftButton from "components/SoftButton";
 import SoftTypography from "components/SoftTypography";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getRoomById } from "API/room/room";
 import { saveRoom } from "API/room/room";
 const { default: Footer } = require("examples/Footer");
@@ -71,6 +71,11 @@ export default function UpdateRoom() {
                 <SoftButton type="submit" variant="gradient" color="info">
                   Save
                 </SoftButton>
+                <Link to="/room" className="ml-4">
+                  <SoftButton variant="gradient" color="secondary">
+                    Back to List
+                  </SoftButton>
+                </Link>
               </SoftBox>
             </SoftBox>
           </Card>

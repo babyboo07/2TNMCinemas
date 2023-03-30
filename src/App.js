@@ -46,6 +46,7 @@ import UpdateRoom from "layouts/room/edit";
 import UpdateSeat from "layouts/seat/edit";
 import CreateSeat from "layouts/seat/create";
 import CreateMovieDay from "layouts/movieDay/create";
+import DetailDirector from "layouts/director/detail";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -147,25 +148,35 @@ export default function App() {
 
         <Routes>
           {getRoutes(routes)}
+          {/* authentication */}
           <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
           <Route path="/authentication/sign-in" element={<SignIn />} />
           <Route path="/authentication/sign-up" element={<SignUp />} />
+          {/* movies */}
           <Route path="/movies/create" element={<Createnew />} />
           <Route path="/movies/edit/:movieId" element={<EditMovie />} />
           <Route path="/movies/detail/:movieId" element={<DetailMovie />} />
+          {/* member */}
           <Route path="/member/create" element={<CreateUser />} />
           <Route path="/member/edit/:userId" element={<EditUser />} />
+          {/* category */}
           <Route path="/category/create" element={<CreateCategory />} />
           <Route path="/category/edit/:cateId" element={<UpdateCategory />} />
+          {/* cast */}
           <Route path="/cast/create" element={<CreateCast />} />
           <Route path="/cast/edit/:castId" element={<UpdateCast />} />
-          <Route path="/cast/detail" element={<DetailCast />} />
+          <Route path="/cast/detail/:castId" element={<DetailCast />} />
+          {/* director */}
           <Route path="/director/create" element={<CreateDirector />} />
-          <Route path="/director/edit/:directorId" element={<UpdateDirector />} />
+          <Route path="/director/edit/:directorId" element={<UpdateDirector />} />         
+          <Route path="/director/detail/:directorId" element={<DetailDirector />} />
+          {/* room */}
           <Route path="/room/create" element={<CreateRoom />} />
           <Route path="/room/edit/:roomId" element={<UpdateRoom />} />
+          {/* seat */}
           <Route path="/seat/create" element={<CreateSeat />} />
           <Route path="/seat/edit/:seatId" element={<UpdateSeat />} />
+          {/* movie_day */}
           <Route path="/movie_day/create" element={<CreateMovieDay />} />
         </Routes>
       </ThemeProvider>

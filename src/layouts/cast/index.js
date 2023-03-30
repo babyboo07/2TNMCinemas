@@ -63,7 +63,6 @@ export default function TablesCast() {
     setPageFocus(event.selected);
   };
 
-
   const confirmModal = (id) => {
     setShowModal(true);
     setCastId(id);
@@ -137,6 +136,19 @@ export default function TablesCast() {
                                 >
                                   Delete
                                 </button>
+                              </div>
+                              <div
+                                data-te-chip-init
+                                data-te-ripple-init
+                                className={`${"bg-gray-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                data-te-close="true"
+                              >
+                                <Link
+                                  to={"/cast/detail/" + c.castId}
+                                  className="font-medium text-white uppercase"
+                                >
+                                  Detail
+                                </Link>
                               </div>
                             </div>
                           </td>

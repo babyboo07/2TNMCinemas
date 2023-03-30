@@ -1,6 +1,7 @@
 import { Card, FormHelperText } from "@mui/material";
 import { checkDuplicateDir } from "API/director/director";
 import { saveDirector } from "API/director/director";
+import { UploadFileImageDir } from "API/movie/movie";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
@@ -20,16 +21,28 @@ export default function CreateDirector() {
     formState: { errors },
   } = useForm();
 
-  const [message , setMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [currentFileName, setCurrentFileName] = useState("");
 
   const onSubmitNewDirector = async (data) => {
+    data["directorImage"] = currentFileName;
     console.log(data);
     const checkExist = await checkDuplicateDir(data);
-    if(!checkExist){
+    if (!checkExist) {
       await saveDirector(data);
-    }else{
-      setMessage(checkExist)
+    } else {
+      setMessage(checkExist);
     }
+  };
+
+  const handleOnchangeFile = async (e) => {
+    const form_data = new FormData();
+    const files = e.target.files;
+
+    form_data.append("file", files[0]);
+    const fileName = await UploadFileImageDir(form_data);
+
+    setCurrentFileName(fileName);
   };
 
   return (
@@ -67,6 +80,16 @@ export default function CreateDirector() {
                         Director Name is Existed
                       </FormHelperText>
                     )}
+                  </SoftBox>
+                </div>
+                <div>
+                  <SoftBox mb={2}>
+                    <SoftBox mb={1} ml={0.5}>
+                      <SoftTypography component="label" variant="caption" fontWeight="bold">
+                        Avatar
+                      </SoftTypography>
+                    </SoftBox>
+                    <SoftInput id="image" type="file" onChange={handleOnchangeFile} />
                   </SoftBox>
                 </div>
               </div>

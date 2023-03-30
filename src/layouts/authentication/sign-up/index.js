@@ -24,7 +24,7 @@ import curved6 from "assets/images/curved-images/curved14.jpg";
 import { useForm } from "react-hook-form";
 import { handleRegister } from "API/authentitication/auth";
 import { VALIDATIONEMAIL } from "AppConstants";
-import { getUserInfoById } from "API/authentitication/auth";
+import { checkDuplicateRegister } from "API/authentitication/auth";
 
 function SignUp() {
   const {
@@ -45,7 +45,7 @@ function SignUp() {
   };
 
   const onSubmitSignup = async (data) => {
-    const checkDuplicateUserName = await getUserInfoById(data.username);
+    const checkDuplicateUserName = await checkDuplicateRegister(data.username);
 
     if (!checkDuplicateUserName) {
       handleRegister(data);

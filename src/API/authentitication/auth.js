@@ -56,4 +56,15 @@ export const getUserInfoById = (userName) => {
   }
 };
 
+export const checkDuplicateRegister = (userName) => {
+  try {
+    return axios.get(URL + "/view/" + userName).then((res) => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    });
+  } catch (error) {
+  }
+};
+
 export { handlelogin, handleRegister, handleLogout };

@@ -113,70 +113,94 @@ function Tables() {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
+
+          <SoftTypography variant="h6" mt={3} ml={3}>Movies Table</SoftTypography>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-              <SoftTypography variant="h6">Movies Table</SoftTypography>
-              <input
-                type="text"
-                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-56 p-2 "
-                placeholder="Title"
-                value={formDataSearch.title}
-                onChange={(e) => handleOnChangeValueFilter(e, "title")}
-              />
-              <select
-                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
-                value={formDataSearch.directorId}
-                onChange={(e) => handleOnChangeValueFilter(e, "directorId")}
-              >
-                <option value={0}> Select Director</option>
-                {lstDir.length > 0 &&
-                  lstDir.map((item, index) => (
-                    <option key={index} value={item.directorId}>
-                      {item.directorName}
-                    </option>
-                  ))}
-              </select>
+            
+              <div className="flex">
+                <label className="mr-1 text-lg mt-1">
+                  <small>Title: </small>
+                </label>
+                <input
+                  type="text"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-56 p-2 "
+                  placeholder="Title"
+                  value={formDataSearch.title}
+                  onChange={(e) => handleOnChangeValueFilter(e, "title")}
+                />
+              </div>
+              <div>
+                <label className="mr-1 text-lg mt-1">
+                  <small>Director: </small>
+                </label>
+                <select
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
+                  value={formDataSearch.directorId}
+                  onChange={(e) => handleOnChangeValueFilter(e, "directorId")}
+                >
+                  <option value={0}> Select Director</option>
+                  {lstDir.length > 0 &&
+                    lstDir.map((item, index) => (
+                      <option key={index} value={item.directorId}>
+                        {item.directorName}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div>
+                <label className="mr-1 text-lg mt-1">
+                  <small>Release Date: </small>
+                </label>
+                <input
+                  type="date"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
+                  value={formDataSearch.releaseDate}
+                  onChange={(e) => handleOnChangeValueFilter(e, "releaseDate")}
+                />
+              </div>
 
-              <input
-                type="date"
-                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
-                value={formDataSearch.releaseDate}
-                onChange={(e) => handleOnChangeValueFilter(e, "releaseDate")}
-              />
-              <select
-                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
-                value={formDataSearch.userId}
-                onChange={(e) => handleOnChangeValueFilter(e, "userId")}
-              >
-                <option value={""}>Select Create By</option>
-                {lstCreateBy.length > 0 &&
-                  lstCreateBy.map((item, index) => {
-                    if (item.roles[0].roleId !== 2) {
-                      return (
-                        <option key={index} value={item.userId}>
-                          {item.userName}
-                        </option>
-                      );
-                    }
-                  })}
-              </select>
-              <button
-                className="bg-sky-800 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400"
-                onClick={() => HandleSearch(formDataSearch)}
-              >
-                Search
-              </button>
-              <button
-                className="bg-gray-400 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400"
-                onClick={handlerReset}
-              >
-                Reset
-              </button>
+              <div>
+                <label className="mr-1 text-lg mt-1">
+                  <small>Create By: </small>
+                </label>
+                <select
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
+                  value={formDataSearch.userId}
+                  onChange={(e) => handleOnChangeValueFilter(e, "userId")}
+                >
+                  <option value={""}>Select Create By</option>
+                  {lstCreateBy.length > 0 &&
+                    lstCreateBy.map((item, index) => {
+                      if (item.roles[0].roleId !== 2) {
+                        return (
+                          <option key={index} value={item.userId}>
+                            {item.userName}
+                          </option>
+                        );
+                      }
+                    })}
+                </select>
+              </div>
 
-              <Link to={"/movies/create"}>
-                <SoftButton variant="gradient" color="info">
-                  Create New
-                </SoftButton>
-              </Link>
+              <div>
+                <button
+                  className="bg-sky-800 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2"
+                  onClick={() => HandleSearch(formDataSearch)}
+                >
+                  Search
+                </button>
+                <button
+                  className="bg-gray-400 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2"
+                  onClick={handlerReset}
+                >
+                  Reset
+                </button>
+                <Link to={"/movies/create"}>
+                  <SoftButton variant="gradient" color="info" className="h-10">
+                    Create New
+                  </SoftButton>
+                </Link>
+              </div>
             </SoftBox>
             <SoftBox
               sx={{

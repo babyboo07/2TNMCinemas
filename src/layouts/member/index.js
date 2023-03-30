@@ -95,13 +95,52 @@ function TablesUser() {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
+            <SoftTypography variant="h6" mt={3} ml={3}>
+              Member table
+            </SoftTypography>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-              <SoftTypography variant="h6">Member table</SoftTypography>
-              <Link to={"/member/create"}>
-                <SoftButton variant="gradient" color="info">
-                  Create New
-                </SoftButton>
-              </Link>
+              <div className="flex">
+                <label className="text-lg mt-1">
+                  <small>Email : </small>
+                </label>
+                <input
+                  type="text"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-72 p-2 ml-2 "
+                  placeholder="email"
+                />
+              </div>
+
+              <div>
+                <label className="text-lg mt-1">
+                  <small>Gender : </small>
+                </label>
+                <select className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-72 p-2 ml-2 ">
+                  <option value={0}> Select Gender</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-lg mt-1">
+                  <small>Role : </small>
+                </label>
+                <select className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 w-72 p-2 ml-2 ">
+                  <option value={""}>Select Role</option>
+                </select>
+              </div>
+
+              <div>
+                <button className="bg-sky-800 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2">
+                  Search
+                </button>
+                <button className="bg-gray-400 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2">
+                  Reset
+                </button>
+                <Link to={"/member/create"}>
+                  <SoftButton variant="gradient" color="info" className="h-10">
+                    Create New
+                  </SoftButton>
+                </Link>
+              </div>
             </SoftBox>
             <SoftBox
               sx={{
@@ -131,6 +170,9 @@ function TablesUser() {
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Address
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Date Of Birth
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Action
@@ -189,6 +231,7 @@ function TablesUser() {
                           </td>
                           <td className="px-6 py-4">{u.phoneNumber}</td>
                           <td className="px-6 py-4">{u.address}</td>
+                          <td className="px-6 py-4">{u.dateOfBirth}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               {(u.roles[0].roleId === 2 ||

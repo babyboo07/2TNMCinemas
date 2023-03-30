@@ -44,7 +44,7 @@ const handleLogout = () => {
 
 export const getUserInfoById = (userName) => {
   try {
-    return axios.get(URL + "/view/user/" + userName, config).then((res) => {
+    return axios.get(URL + "/user/" + userName, config).then((res) => {
       if (res.status === 200) {
         return res.data;
       }else{

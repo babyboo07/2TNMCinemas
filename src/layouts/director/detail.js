@@ -31,18 +31,21 @@ export default function DetailDirector() {
         <SoftBox mb={3}>
           <Card>
             <SoftBox p={2}>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="flex pt-3">
-                    <span className="pr-3 text-base font-medium">
-                      Director Name : {director.directorName}
-                    </span>
+              <div className="container mx-auto">
+                <div className="grid grid-cols-3">
+                  <div className="span-cols-2">
                     <span className="object-cover w-96">
-                      <img src={URL_IMG + director.directorImage} alt="" />
+                      <img src={URL_IMG + director.directorImage} alt={director.directorName} />
                     </span>
                   </div>
+                  <div>
+                    <div className="flex pt-3">
+                      <span className=" text-xl font-medium">
+                        Director Name : {director.directorName}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div></div>
               </div>
             </SoftBox>
           </Card>

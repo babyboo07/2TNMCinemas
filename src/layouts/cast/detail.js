@@ -10,11 +10,10 @@ const { default: DashboardLayout } = require("examples/LayoutContainers/Dashboar
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
 
 const DetailCast = () => {
-  const {castId} = useParams();
+  const { castId } = useParams();
 
-  
   const [cast, setCast] = useState({});
-  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -32,16 +31,20 @@ const DetailCast = () => {
         <SoftBox mb={3}>
           <Card>
             <SoftBox p={2}>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="flex pt-3">
-                    <span className="pr-3 text-base font-medium">Cast Name: {cast?.castName}</span>
+              <div className="container mx-auto">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
                     <span className="object-cover w-96">
                       <img src={URL_IMG + cast.image} alt="" />
                     </span>
                   </div>
-                </div>
-                <div>                 
+                  <div>
+                    <div className="flex pt-3">
+                      <span className="pr-3 text-xl font-medium">
+                        Cast Name: {cast?.castName}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </SoftBox>

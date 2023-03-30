@@ -16,6 +16,10 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { listMovies } from "API/movies/movie";
 import PagingList from "layouts/utils/Pagination";
+import { listDirector } from "API/director/director";
+import { listUser } from "API/member/user";
+import { IFormSearchMovie } from "layouts/Init/initForm";
+import { HandleSearchItemMovie } from "layouts/utils/HandleFilter";
 
 function Tables() {
   const [listMovie, setListMovie] = useState([]);
@@ -24,6 +28,10 @@ function Tables() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
+  const [lstDir, setLstDir] = useState([]);
+  const [lstCreateBy, setLstCreateBy] = useState([]);
+  const [formDataSearch, setFormDataSearch] = useState(IFormSearchMovie);
+  const [dataFilter, setDataFilter] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -31,8 +39,27 @@ function Tables() {
 
   const fetchData = async () => {
     const list = await listMovies();
+    const directors = await listDirector();
+    const createByUsers = await listUser();
+
+    setLstDir(directors);
+    setLstCreateBy(createByUsers);
     setListMovie(list);
   };
+
+  const handleOnChangeValueFilter = (event, field) => {
+    const fields = { ...formDataSearch };
+
+    fields[field] = event.target.value;
+
+    setFormDataSearch(fields);
+  };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(dataFilter.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(dataFilter.length / itemsPerPage));
+  }, [dataFilter]);
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
@@ -42,8 +69,18 @@ function Tables() {
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
-    setPaginatedItems(listMovie.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(listMovie.length / itemsPerPage));
+    if (
+      formDataSearch.title !== "" &&
+      formDataSearch.releaseDate !== "" &&
+      formDataSearch.userId !== "" &&
+      formDataSearch.directorId > 0
+    ) {
+      setPaginatedItems(listMovie.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(listMovie.length / itemsPerPage));
+    }
+
+    setPaginatedItems(dataFilter.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(dataFilter.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, pageFocus]);
 
   const handleChangeItemsPerPage = (e) => {
@@ -59,6 +96,17 @@ function Tables() {
     setPageFocus(event.selected);
   };
 
+  const HandleSearch = (formData) => {
+    const lstFilter = listMovie.filter((x) => HandleSearchItemMovie(x, formData));
+
+    setDataFilter(lstFilter);
+  };
+
+  const handlerReset = () => {
+    setFormDataSearch(IFormSearchMovie);
+    HandleSearch(IFormSearchMovie);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -67,6 +115,63 @@ function Tables() {
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
               <SoftTypography variant="h6">Movies Table</SoftTypography>
+              <input
+                type="text"
+                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-56 p-2 "
+                placeholder="Title"
+                value={formDataSearch.title}
+                onChange={(e) => handleOnChangeValueFilter(e, "title")}
+              />
+              <select
+                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
+                value={formDataSearch.directorId}
+                onChange={(e) => handleOnChangeValueFilter(e, "directorId")}
+              >
+                <option value={0}> Select Director</option>
+                {lstDir.length > 0 &&
+                  lstDir.map((item, index) => (
+                    <option key={index} value={item.directorId}>
+                      {item.directorName}
+                    </option>
+                  ))}
+              </select>
+
+              <input
+                type="date"
+                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
+                value={formDataSearch.releaseDate}
+                onChange={(e) => handleOnChangeValueFilter(e, "releaseDate")}
+              />
+              <select
+                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-56 p-2 "
+                value={formDataSearch.userId}
+                onChange={(e) => handleOnChangeValueFilter(e, "userId")}
+              >
+                <option value={""}>Select Create By</option>
+                {lstCreateBy.length > 0 &&
+                  lstCreateBy.map((item, index) => {
+                    if (item.roles[0].roleId !== 2) {
+                      return (
+                        <option key={index} value={item.userId}>
+                          {item.userName}
+                        </option>
+                      );
+                    }
+                  })}
+              </select>
+              <button
+                className="bg-sky-800 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400"
+                onClick={() => HandleSearch(formDataSearch)}
+              >
+                Search
+              </button>
+              <button
+                className="bg-gray-400 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400"
+                onClick={handlerReset}
+              >
+                Reset
+              </button>
+
               <Link to={"/movies/create"}>
                 <SoftButton variant="gradient" color="info">
                   Create New

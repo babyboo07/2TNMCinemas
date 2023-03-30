@@ -49,4 +49,15 @@ const editUser = async (data) => {
   }
 };
 
-export { listUser, createUser, editUser, userInfo };
+const approveRoleUser = async (id) => {
+  try {
+    return await axios.get(URL + `/super_admin/up_role/`+id , config).then((res) => {
+      window.location.href = "/member";
+      return res.data;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { listUser, createUser, editUser, userInfo ,approveRoleUser };

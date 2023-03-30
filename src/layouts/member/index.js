@@ -17,10 +17,11 @@ import { useEffect, useState } from "react";
 import { listUser } from "API/member/user";
 import { MEMBER } from "AppConstants";
 import { ADMIN } from "AppConstants";
-
+import jwt_decode from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import PagingList from "layouts/utils/Pagination";
+import { approveRoleUser } from "API/member/user";
 
 function TablesUser() {
   const [listMember, setListMember] = useState([]);
@@ -30,6 +31,8 @@ function TablesUser() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
+  const [author, setAuthor] = useState({});
+  const [idUserApprove, setIdUserApprove] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -38,6 +41,13 @@ function TablesUser() {
   const fetchData = async () => {
     const list = await listUser();
     setListMember(list);
+
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    if (decoded) {
+      setAuthor(decoded);
+    }
   };
 
   useEffect(() => {
@@ -66,7 +76,17 @@ function TablesUser() {
   };
 
   const confirmModal = (id) => {
+    setIdUserApprove(id);
     setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setIdUserApprove("");
+    setShowModal(true);
+  };
+
+  const ApproveRole = () => {
+    approveRoleUser(idUserApprove);
   };
 
   return (
@@ -171,24 +191,32 @@ function TablesUser() {
                           <td className="px-6 py-4">{u.address}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div
-                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                              >
-                                <Link className="uppercase" to={"/member/edit/" + u.userId}>
-                                  Edit
-                                </Link>
-                              </div>
-                              <div
-                                className={`${"bg-rose-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                              >
-                                <button
-                                  className="uppercase"
-                                  type="button"
-                                  onClick={() => confirmModal(u.userId)}
+                              {(u.roles[0].roleId === 2 ||
+                                author.roles[0] === "Role_Super_Admin") && (
+                                <div
+                                  className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
                                 >
-                                  Up role
-                                </button>
-                              </div>
+                                  <Link className="uppercase" to={"/member/edit/" + u.userId}>
+                                    Edit
+                                  </Link>
+                                </div>
+                              )}
+
+                              {author.roles[0] !== undefined &&
+                                author.roles[0] === "Role_Super_Admin" &&
+                                u.roles[0].roleId === 2 && (
+                                  <div
+                                    className={`${"bg-rose-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                  >
+                                    <button
+                                      className="uppercase"
+                                      type="button"
+                                      onClick={() => confirmModal(u.userId)}
+                                    >
+                                      Up role
+                                    </button>
+                                  </div>
+                                )}
                             </div>
                           </td>
                         </tr>
@@ -240,14 +268,14 @@ function TablesUser() {
                   <button
                     className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => closeModal()}
                   >
                     Close
                   </button>
                   <button
                     className="bg-cyan-500 text-white active:bg-cyan-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    // onClick={() => deleteUserByID()}
+                    onClick={() => ApproveRole()}
                   >
                     Update
                   </button>

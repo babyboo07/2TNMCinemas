@@ -9,7 +9,7 @@ const config = {
 
 export const getListMovieDay = () => {
   try {
-    return axios.get(URL + "/admin/movieDays", config).then((res) => {
+    return axios.get(URL + "/staff/movieDays", config).then((res) => {
       if (res.status === 200) {
         return res.data;
       }

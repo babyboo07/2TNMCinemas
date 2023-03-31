@@ -9,7 +9,7 @@ const config = {
 
 const listMovies = () => {
   try {
-    return axios.get(URL + `/admin/movies`, config).then((res) => {
+    return axios.get(URL + `/staff/movies`, config).then((res) => {
       return res.data;
     });
   } catch (error) {
@@ -32,7 +32,7 @@ const saveMovies = (data) => {
 
 const getMoviesById = (id) => {
   try {
-    return axios.get(URL + "/admin/movie/" + id, config).then((res) => {
+    return axios.get(URL + "/staff/movie/" + id, config).then((res) => {
       if (res.status === 200) {
         console.log(res.data);
         return res.data;

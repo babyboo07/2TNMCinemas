@@ -16,6 +16,8 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ListCategory } from "API/category/category";
 import PagingList from "layouts/utils/Pagination";
+import { IDataToken } from "layouts/Init/initForm";
+import jwt_decode from "jwt-decode";
 
 export default function TablesCategory() {
   const [lstCategory, setListCategory] = useState([]);
@@ -24,6 +26,7 @@ export default function TablesCategory() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
+  const [author, setAuthor] = useState(IDataToken);
 
   useEffect(() => {
     fetchData();
@@ -31,6 +34,12 @@ export default function TablesCategory() {
 
   const fetchData = async () => {
     const list = await ListCategory();
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    if (decoded) {
+      setAuthor(decoded);
+    }
     setListCategory(list);
   };
   useEffect(() => {
@@ -65,11 +74,13 @@ export default function TablesCategory() {
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
               <SoftTypography variant="h6">Category Table</SoftTypography>
-              <Link to={"/category/create"}>
-                <SoftButton variant="gradient" color="info">
-                  Create New
-                </SoftButton>
-              </Link>
+              {(author?.roles[0] === "Role_Admin" || author?.roles[0] === "Role_Super_Admin") && (
+                <Link to={"/category/create"}>
+                  <SoftButton variant="gradient" color="info">
+                    Create New
+                  </SoftButton>
+                </Link>
+              )}
             </SoftBox>
             <SoftBox
               sx={{
@@ -122,14 +133,17 @@ export default function TablesCategory() {
                           <td className="px-6 py-4">{cate.createByUserEmail}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <Link to={"/category/edit/" + cate.categoryId}>UPDATE</Link>
-                              </div>
+                              {(author?.roles[0] === "Role_Admin" ||
+                                author?.roles[0] === "Role_Super_Admin") && (
+                                <div
+                                  data-te-chip-init
+                                  data-te-ripple-init
+                                  className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                  data-te-close="true"
+                                >
+                                  <Link to={"/category/edit/" + cate.categoryId}>UPDATE</Link>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>

@@ -9,7 +9,7 @@ const config = {
 
 const listUser = () => {
   try {
-    return axios.get(URL + `/admin/users`, config).then((res) => {
+    return axios.get(URL + `/staff/users`, config).then((res) => {
       return res.data;
     });
   } catch (error) {
@@ -49,9 +49,9 @@ const editUser = async (data) => {
   }
 };
 
-const approveRoleUser = async (id) => {
+const approveRoleUserToAdmin = async (id) => {
   try {
-    return await axios.get(URL + `/super_admin/up_role/`+id , config).then((res) => {
+    return await axios.get(URL + `/super_admin/up_role_admin/`+id , config).then((res) => {
       window.location.href = "/member";
       return res.data;
     });
@@ -60,4 +60,15 @@ const approveRoleUser = async (id) => {
   }
 };
 
-export { listUser, createUser, editUser, userInfo ,approveRoleUser };
+const approveRoleUserToStaff = async (id) => {
+  try {
+    return await axios.get(URL + `/super_admin/up_role_admin/`+id , config).then((res) => {
+      window.location.href = "/member";
+      return res.data;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { listUser, createUser, editUser, userInfo ,approveRoleUserToAdmin , approveRoleUserToStaff};

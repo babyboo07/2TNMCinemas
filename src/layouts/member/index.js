@@ -21,10 +21,14 @@ import jwt_decode from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import PagingList from "layouts/utils/Pagination";
-import { approveRoleUser } from "API/member/user";
 import { getLstRole } from "API/authentitication/auth";
 import { IFormSearchMember } from "layouts/Init/initForm";
 import { HandleSearchItemMember } from "layouts/utils/HandleFilter";
+import { SUPER_ADMIN } from "AppConstants";
+import { STAFF } from "AppConstants";
+import { IDataToken } from "layouts/Init/initForm";
+import { approveRoleUserToAdmin } from "API/member/user";
+import { approveRoleUserToStaff } from "API/member/user";
 
 function TablesUser() {
   const [listMember, setListMember] = useState([]);
@@ -34,11 +38,14 @@ function TablesUser() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
-  const [author, setAuthor] = useState({});
+  const [author, setAuthor] = useState(IDataToken);
   const [idUserApprove, setIdUserApprove] = useState("");
   const [roles, setRoles] = useState([]);
   const [formSearch, setFormSearch] = useState(IFormSearchMember);
   const [dataFilter, setDataFilter] = useState([]);
+
+  // status = 1 : up role staff , status =2 : up role admin
+  const [upRoleStatus, setUpRoleStatus] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -96,7 +103,8 @@ function TablesUser() {
     setPageFocus(event.selected);
   };
 
-  const confirmModal = (id) => {
+  const confirmModal = (id, status) => {
+    setUpRoleStatus(status);
     setIdUserApprove(id);
     setShowModal(true);
   };
@@ -104,14 +112,18 @@ function TablesUser() {
   const closeModal = () => {
     setIdUserApprove("");
     setShowModal(true);
+    setUpRoleStatus(0);
   };
 
   const ApproveRole = () => {
-    approveRoleUser(idUserApprove);
+    if (upRoleStatus === 1) {
+      approveRoleUserToStaff(idUserApprove);
+    } else {
+      approveRoleUserToAdmin(idUserApprove);
+    }
   };
 
   const HandleSearch = (formData) => {
-    
     console.log(formData);
     const lstFilter = listMember.filter((x) => HandleSearchItemMember(x, formData));
 
@@ -193,11 +205,13 @@ function TablesUser() {
                 >
                   Reset
                 </button>
-                <Link to={"/member/create"}>
-                  <SoftButton variant="gradient" color="info" className="h-10">
-                    Create New
-                  </SoftButton>
-                </Link>
+                {(author?.roles[0] === "Role_Admin" || author?.roles[0] === "Role_Super_Admin") && (
+                  <Link to={"/member/create"}>
+                    <SoftButton variant="gradient" color="info" className="h-10">
+                      Create New
+                    </SoftButton>
+                  </Link>
+                )}
               </div>
             </SoftBox>
             <SoftBox
@@ -275,11 +289,20 @@ function TablesUser() {
                                 >
                                   {u.roles[0].roleName}
                                 </div>
-                              ) : (
+                              ) : u.roles[0].roleId === SUPER_ADMIN ? (
                                 <div
                                   data-te-chip-init
                                   data-te-ripple-init
                                   className="[word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] bg-red-500 py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"
+                                  data-te-close="true"
+                                >
+                                  {u.roles[0].roleName}
+                                </div>
+                              ) : (
+                                <div
+                                  data-te-chip-init
+                                  data-te-ripple-init
+                                  className="[word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] bg-sky-500 py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"
                                   data-te-close="true"
                                 >
                                   {u.roles[0].roleName}
@@ -292,8 +315,9 @@ function TablesUser() {
                           <td className="px-6 py-4">{u.dateOfBirth}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              {(u.roles[0].roleId === 2 ||
-                                author.roles[0] === "Role_Super_Admin") && (
+                              {(u.roles[0].roleId === MEMBER ||
+                                author.roles[0] === "Role_Super_Admin" ||
+                                u.roles[0].roleId === STAFF) && (
                                 <div
                                   className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
                                 >
@@ -305,17 +329,33 @@ function TablesUser() {
 
                               {author.roles[0] !== undefined &&
                                 author.roles[0] === "Role_Super_Admin" &&
-                                u.roles[0].roleId === 2 && (
-                                  <div
-                                    className={`${"bg-rose-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                  >
-                                    <button
-                                      className="uppercase"
-                                      type="button"
-                                      onClick={() => confirmModal(u.userId)}
+                                (u.roles[0].roleId === MEMBER || u.roles[0].roleId === STAFF) && (
+                                  <div className="flex">
+                                    {u.roles[0].roleId !== STAFF && (
+                                      <div
+                                        className={`${"bg-sky-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                      >
+                                        <button
+                                          className="uppercase"
+                                          type="button"
+                                          onClick={() => confirmModal(u.userId, 1)}
+                                        >
+                                          Up role Staff
+                                        </button>
+                                      </div>
+                                    )}
+
+                                    <div
+                                      className={`${"bg-green-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
                                     >
-                                      Up role
-                                    </button>
+                                      <button
+                                        className="uppercase"
+                                        type="button"
+                                        onClick={() => confirmModal(u.userId, 2)}
+                                      >
+                                        Up role Admin
+                                      </button>
+                                    </div>
                                   </div>
                                 )}
                             </div>

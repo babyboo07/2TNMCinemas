@@ -18,6 +18,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { deleteCastById } from "API/cast/cast";
 import PagingList from "layouts/utils/Pagination";
+import { IDataToken } from "layouts/Init/initForm";
+import jwt_decode from "jwt-decode";
 
 export default function TablesCast() {
   const [casts, setCasts] = useState([]);
@@ -28,6 +30,7 @@ export default function TablesCast() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
+  const [author, setAuthor] = useState(IDataToken);
 
   useEffect(() => {
     fetchData();
@@ -35,6 +38,12 @@ export default function TablesCast() {
 
   const fetchData = async () => {
     const list = await listCast();
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    if (decoded) {
+      setAuthor(decoded);
+    }
     setCasts(list);
   };
 
@@ -80,11 +89,13 @@ export default function TablesCast() {
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
               <SoftTypography variant="h6">Cast Table</SoftTypography>
-              <Link to={"/cast/create"}>
-                <SoftButton variant="gradient" color="info">
-                  Create New
-                </SoftButton>
-              </Link>
+              {(author?.roles[0] === "Role_Admin" || author?.roles[0] === "Role_Super_Admin") && (
+                <Link to={"/cast/create"}>
+                  <SoftButton variant="gradient" color="info">
+                    Create New
+                  </SoftButton>
+                </Link>
+              )}
             </SoftBox>
             <SoftBox
               sx={{
@@ -115,28 +126,34 @@ export default function TablesCast() {
                           <td className="px-6 py-4">{c.castName}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <Link to={"/cast/edit/" + c.castId}>UPDATE</Link>
-                              </div>
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <button
-                                  type="button"
-                                  className="font-medium text-white uppercase"
-                                  onClick={() => confirmModal(c.castId)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
+                              {(author?.roles[0] === "Role_Admin" ||
+                                author?.roles[0] === "Role_Super_Admin") && (
+                                <div className="flex">
+                                  <div
+                                    data-te-chip-init
+                                    data-te-ripple-init
+                                    className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                    data-te-close="true"
+                                  >
+                                    <Link to={"/cast/edit/" + c.castId}>UPDATE</Link>
+                                  </div>
+                                  <div
+                                    data-te-chip-init
+                                    data-te-ripple-init
+                                    className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                    data-te-close="true"
+                                  >
+                                    <button
+                                      type="button"
+                                      className="font-medium text-white uppercase"
+                                      onClick={() => confirmModal(c.castId)}
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+
                               <div
                                 data-te-chip-init
                                 data-te-ripple-init

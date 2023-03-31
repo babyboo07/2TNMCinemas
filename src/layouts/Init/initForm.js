@@ -10,3 +10,10 @@ export const  IFormSearchMember = {
     gender: 0,
     roleId: 0,
 }
+
+export const  IDataToken = {
+    sub : "",
+    roles: [],
+    iss: "",
+    exp: 0
+}

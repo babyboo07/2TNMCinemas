@@ -1,4 +1,5 @@
 import { Card } from "@mui/material";
+import { getUserInfoById } from "API/authentitication/auth";
 import { deleteMovieDay } from "API/movieDay/movieDay";
 import { getListMovieDay } from "API/movieDay/movieDay";
 import SoftBox from "components/SoftBox";
@@ -10,6 +11,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import PagingList from "layouts/utils/Pagination";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import { IDataToken } from "layouts/Init/initForm";
 
 export default function TableMovieDay() {
   const [lstMovieDay, setLstMovieDay] = useState([]);
@@ -18,12 +21,17 @@ export default function TableMovieDay() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
+  const [author, setAuthor] = useState(IDataToken);
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
     const data = await getListMovieDay();
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+    console.log(decoded);
+    setAuthor(decoded);
     if (data) {
       setLstMovieDay(data);
     }
@@ -58,6 +66,7 @@ export default function TableMovieDay() {
     deleteMovieDay(id);
   };
 
+  console.log(author);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -66,11 +75,13 @@ export default function TableMovieDay() {
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
               <SoftTypography variant="h6">Movie Day Table</SoftTypography>
-              <Link to={"/movie_day/create"}>
-                <SoftButton variant="gradient" color="info">
-                  Create New
-                </SoftButton>
-              </Link>
+              {(author.roles[0] === "Role_Admin" || author.roles[0] === "Role_Super_Admin") && (
+                <Link to={"/movie_day/create"}>
+                  <SoftButton variant="gradient" color="info">
+                    Create New
+                  </SoftButton>
+                </Link>
+              )}
             </SoftBox>
             <SoftBox
               sx={{
@@ -113,14 +124,17 @@ export default function TableMovieDay() {
                           <td className="px-6 py-4">{movieDay.roomName}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-rose-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <button onClick={() => handleDelete(movieDay.id)}>DELETE</button>
-                              </div>
+                              {(author.roles[0] === "Role_Admin" ||
+                                author.roles[0] === "Role_Super_Admin") && (
+                                <div
+                                  data-te-chip-init
+                                  data-te-ripple-init
+                                  className={`${"bg-rose-600 [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                  data-te-close="true"
+                                >
+                                  <button onClick={() => handleDelete(movieDay.id)}>DELETE</button>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>

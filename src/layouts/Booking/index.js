@@ -10,6 +10,10 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import PagingList from "layouts/utils/Pagination";
+import { getUserInfoById } from "API/authentitication/auth";
+import { ADMIN } from "AppConstants";
+import { SUPER_ADMIN } from "AppConstants";
+import { MEMBER } from "AppConstants";
 
 export default function TableBookingDepot() {
   const [bookings, setBookings] = useState([]);
@@ -18,6 +22,7 @@ export default function TableBookingDepot() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
+  const [author, setAuthor] = useState({});
 
   useEffect(() => {
     fetchData();
@@ -25,10 +30,13 @@ export default function TableBookingDepot() {
 
   const fetchData = async () => {
     const bookingData = await listMovieBooking();
-    const user = localStorage.getItem("token") ? localStorage.getItem("token") : "";
-    var decoded = jwt_decode(user);
-    console.log(decoded);
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
 
+    if (decoded) {
+      const user = await getUserInfoById(decoded.sub);
+      setAuthor(user);
+    }
     if (bookingData) {
       setBookings(bookingData);
     }
@@ -133,26 +141,27 @@ export default function TableBookingDepot() {
                               <span className="text-red-300">Approve</span>
                             )}
                           </td>
-                          {c.status !== 2 && (
-                            <td className="px-6 py-4">
-                              <div className="flex items-center">
-                                <div
-                                  data-te-chip-init
-                                  data-te-ripple-init
-                                  className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                  data-te-close="true"
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() => approveBookingDepot(c.bookingId)}
-                                    className="font-medium text-white uppercase"
+                          {c.status !== 2 &&
+                            (author.roles[0].roleId !== MEMBER ) && (
+                              <td className="px-6 py-4">
+                                <div className="flex items-center">
+                                  <div
+                                    data-te-chip-init
+                                    data-te-ripple-init
+                                    className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                    data-te-close="true"
                                   >
-                                    Approve
-                                  </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => approveBookingDepot(c.bookingId)}
+                                      className="font-medium text-white uppercase"
+                                    >
+                                      Approve
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                          )}
+                              </td>
+                            )}
                         </tr>
                       ))}
                   </tbody>

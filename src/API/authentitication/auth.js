@@ -68,7 +68,7 @@ export const checkDuplicateRegister = (userName) => {
 
 export const getLstRole = () => {
   try {
-    return axios.get(URL + "/admin/roles", config).then((res) => {
+    return axios.get(URL + "/staff/roles", config).then((res) => {
       if (res.status === 200) {
         return res.data;
       }

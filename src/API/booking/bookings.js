@@ -10,7 +10,7 @@ const config = {
 
 export const listMovieBooking = () => {
   try {
-    return axios.get(URL + `/admin/booking_depot`, config).then((res) => {
+    return axios.get(URL + `/staff/booking_depot`, config).then((res) => {
       return res.data;
     });
   } catch (error) {
@@ -20,7 +20,7 @@ export const listMovieBooking = () => {
 
 export const approveBooking = (id ) => {
   try {
-    return axios.get(URL + `/admin/booking/approve/`+ id, config).then((res) => {
+    return axios.get(URL + `/staff/booking/approve/`+ id, config).then((res) => {
       window.location.href = "/bookings";
       return res.data;
     });

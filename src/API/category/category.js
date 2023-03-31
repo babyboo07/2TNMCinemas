@@ -9,7 +9,7 @@ const config = {
 
 export const ListCategory = async () => {
   try {
-    return await axios.get(URL + `/admin/categories`, config).then((res) => {
+    return await axios.get(URL + `/staff/categories`, config).then((res) => {
       return res.data;
     });
   } catch (error) {

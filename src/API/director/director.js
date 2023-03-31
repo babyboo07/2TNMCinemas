@@ -9,7 +9,7 @@ const config = {
 
 const listDirector = () => {
   try {
-    return axios.get(URL + `/admin/directors`, config).then((res) => {
+    return axios.get(URL + `/staff/directors`, config).then((res) => {
       return res.data;
     });
   } catch (error) {
@@ -46,7 +46,7 @@ export const checkDuplicateDir = (data) => {
 
 const getDirectorbyId = (id) => {
   try {
-    return axios.get(URL + "/admin/director/" + id, config).then((res) => {
+    return axios.get(URL + "/staff/director/" + id, config).then((res) => {
       if (res.status === 200) {
         console.log(res.data);
         return res.data;

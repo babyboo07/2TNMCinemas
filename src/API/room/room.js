@@ -9,7 +9,7 @@ const config = {
 
 const listRoom = () => {
   try {
-    return axios.get(URL + `/admin/room`, config).then((res) => {
+    return axios.get(URL + `/staff/room`, config).then((res) => {
       return res.data;
     });
   } catch (error) {

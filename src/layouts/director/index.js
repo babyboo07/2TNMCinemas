@@ -19,6 +19,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { deleteDirectorById } from "API/director/director";
 import PagingList from "layouts/utils/Pagination";
+import jwt_decode from "jwt-decode";
+import { IDataToken } from "layouts/Init/initForm";
 
 export default function TablesDirector() {
   const [director, setDirector] = useState([]);
@@ -29,6 +31,7 @@ export default function TablesDirector() {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
+  const [author, setAuthor] = useState(IDataToken);
 
   useEffect(() => {
     fetchData();
@@ -36,6 +39,10 @@ export default function TablesDirector() {
 
   const fetchData = async () => {
     const list = await listDirector();
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+    console.log(decoded);
+    setAuthor(decoded);
     setDirector(list);
   };
   useEffect(() => {
@@ -80,11 +87,13 @@ export default function TablesDirector() {
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
               <SoftTypography variant="h6">Director Table</SoftTypography>
-              <Link to={"/director/create"}>
-                <SoftButton variant="gradient" color="info">
-                  Create New
-                </SoftButton>
-              </Link>
+              {(author?.roles[0] === "Role_Admin" || author?.roles[0] === "Role_Super_Admin") && (
+                <Link to={"/director/create"}>
+                  <SoftButton variant="gradient" color="info">
+                    Create New
+                  </SoftButton>
+                </Link>
+              )}
             </SoftBox>
             <SoftBox
               sx={{
@@ -115,28 +124,34 @@ export default function TablesDirector() {
                           <td className="px-6 py-4">{d.directorName}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-amber-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <Link to={"/director/edit/" + d.directorId}>UPDATE</Link>
-                              </div>
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <button
-                                  type="button"
-                                  className="font-medium text-white uppercase"
-                                  onClick={() => confirmModal(d.directorId)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
+                              {(author?.roles[0] === "Role_Admin" ||
+                                author?.roles[0] === "Role_Super_Admin") && (
+                                <div className="flex">
+                                  <div
+                                    data-te-chip-init
+                                    data-te-ripple-init
+                                    className={`${"bg-amber-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                    data-te-close="true"
+                                  >
+                                    <Link to={"/director/edit/" + d.directorId}>UPDATE</Link>
+                                  </div>
+                                  <div
+                                    data-te-chip-init
+                                    data-te-ripple-init
+                                    className={`${"bg-red-500  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                    data-te-close="true"
+                                  >
+                                    <button
+                                      type="button"
+                                      className="font-medium text-white uppercase"
+                                      onClick={() => confirmModal(d.directorId)}
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+
                               <div
                                 data-te-chip-init
                                 data-te-ripple-init

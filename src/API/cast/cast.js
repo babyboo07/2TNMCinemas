@@ -9,7 +9,7 @@ const config = {
 
 const listCast = () => {
   try {
-    return axios.get(URL + `/admin/cast`, config).then((res) => {
+    return axios.get(URL + `/staff/cast`, config).then((res) => {
       return res.data;
     });
   } catch (error) {
@@ -46,7 +46,7 @@ export const checkDuplicate = (data) => {
 
 const getCastbyId = (id) => {
   try {
-    return axios.get(URL + "/admin/cast/" + id, config).then((res) => {
+    return axios.get(URL + "/staff/cast/" + id, config).then((res) => {
       if (res.status === 200) {
         console.log(res.data);
         return res.data;

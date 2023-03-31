@@ -20,6 +20,8 @@ import { listDirector } from "API/director/director";
 import { listUser } from "API/member/user";
 import { IFormSearchMovie } from "layouts/Init/initForm";
 import { HandleSearchItemMovie } from "layouts/utils/HandleFilter";
+import { IDataToken } from "layouts/Init/initForm";
+import jwt_decode from "jwt-decode";
 
 function Tables() {
   const [listMovie, setListMovie] = useState([]);
@@ -32,6 +34,7 @@ function Tables() {
   const [lstCreateBy, setLstCreateBy] = useState([]);
   const [formDataSearch, setFormDataSearch] = useState(IFormSearchMovie);
   const [dataFilter, setDataFilter] = useState([]);
+  const [author, setAuthor] = useState(IDataToken);
 
   useEffect(() => {
     fetchData();
@@ -41,6 +44,12 @@ function Tables() {
     const list = await listMovies();
     const directors = await listDirector();
     const createByUsers = await listUser();
+    const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
+    var decoded = jwt_decode(token);
+
+    if (decoded) {
+      setAuthor(decoded);
+    }
 
     setLstDir(directors);
     setLstCreateBy(createByUsers);
@@ -196,11 +205,13 @@ function Tables() {
                 >
                   Reset
                 </button>
-                <Link to={"/movies/create"}>
-                  <SoftButton variant="gradient" color="info" className="h-10">
-                    Create New
-                  </SoftButton>
-                </Link>
+                {(author?.roles[0] === "Role_Admin" || author?.roles[0] === "Role_Super_Admin") && (
+                  <Link to={"/movies/create"}>
+                    <SoftButton variant="gradient" color="info" className="h-10">
+                      Create New
+                    </SoftButton>
+                  </Link>
+                )}
               </div>
             </SoftBox>
             <SoftBox
@@ -248,16 +259,20 @@ function Tables() {
                           <td className="px-6 py-4">{m.createByName}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div
-                                data-te-chip-init
-                                data-te-ripple-init
-                                className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
-                                data-te-close="true"
-                              >
-                                <Link className="uppercase" to={"/movies/edit/" + m.id}>
-                                  update
-                                </Link>
-                              </div>
+                              {(author?.roles[0] === "Role_Admin" ||
+                                author?.roles[0] === "Role_Super_Admin") && (
+                                <div
+                                  data-te-chip-init
+                                  data-te-ripple-init
+                                  className={`${"bg-amber-300  [word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1] text-white"}`}
+                                  data-te-close="true"
+                                >
+                                  <Link className="uppercase" to={"/movies/edit/" + m.id}>
+                                    update
+                                  </Link>
+                                </div>
+                              )}
+
                               <div
                                 data-te-chip-init
                                 data-te-ripple-init

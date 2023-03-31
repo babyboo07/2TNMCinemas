@@ -47,7 +47,7 @@ export const getUserInfoById = (userName) => {
     return axios.get(URL + "/user/" + userName, config).then((res) => {
       if (res.status === 200) {
         return res.data;
-      }else{
+      } else {
         handleLogout();
       }
     });
@@ -63,8 +63,17 @@ export const checkDuplicateRegister = (userName) => {
         return res.data;
       }
     });
-  } catch (error) {
-  }
+  } catch (error) {}
+};
+
+export const getLstRole = () => {
+  try {
+    return axios.get(URL + "/admin/roles", config).then((res) => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    });
+  } catch (error) {}
 };
 
 export { handlelogin, handleRegister, handleLogout };

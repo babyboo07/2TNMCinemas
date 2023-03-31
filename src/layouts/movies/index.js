@@ -70,13 +70,14 @@ function Tables() {
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
     if (
-      formDataSearch.title !== "" &&
-      formDataSearch.releaseDate !== "" &&
-      formDataSearch.userId !== "" &&
-      formDataSearch.directorId > 0
+      formDataSearch.title === "" &&
+      formDataSearch.releaseDate === "" &&
+      formDataSearch.userId === "" &&
+      formDataSearch.directorId === 0
     ) {
       setPaginatedItems(listMovie.slice(itemOffset, endOffset));
       setPageCount(Math.ceil(listMovie.length / itemsPerPage));
+      return;
     }
 
     setPaginatedItems(dataFilter.slice(itemOffset, endOffset));
@@ -113,10 +114,10 @@ function Tables() {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
-
-          <SoftTypography variant="h6" mt={3} ml={3}>Movies Table</SoftTypography>
+            <SoftTypography variant="h6" mt={3} ml={3}>
+              Movies Table
+            </SoftTypography>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-            
               <div className="flex">
                 <label className="mr-1 text-lg mt-1">
                   <small>Title: </small>

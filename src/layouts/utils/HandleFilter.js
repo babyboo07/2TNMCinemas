@@ -19,3 +19,22 @@ export const HandleSearchItemMovie = (item, formData) => {
 
   return conditions;
 };
+
+
+export const HandleSearchItemMember = (item, formData) => {
+  let conditions = true;
+
+  if (formData.email) {
+    conditions = conditions && item.email.toLocaleLowerCase().includes(formData.email.toLocaleLowerCase());
+  }
+
+  if (formData.gender > 0) {
+    conditions = conditions && item.gender === Number(formData.gender);
+  }
+
+  if (formData.roleId) {
+    conditions = conditions && item?.roles[0]?.roleId === Number(formData.roleId);
+  }
+
+  return conditions;
+};

@@ -22,6 +22,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import PagingList from "layouts/utils/Pagination";
 import { approveRoleUser } from "API/member/user";
+import { getLstRole } from "API/authentitication/auth";
+import { IFormSearchMember } from "layouts/Init/initForm";
+import { HandleSearchItemMember } from "layouts/utils/HandleFilter";
 
 function TablesUser() {
   const [listMember, setListMember] = useState([]);
@@ -33,6 +36,9 @@ function TablesUser() {
   const [pageFocus, setPageFocus] = useState(0);
   const [author, setAuthor] = useState({});
   const [idUserApprove, setIdUserApprove] = useState("");
+  const [roles, setRoles] = useState([]);
+  const [formSearch, setFormSearch] = useState(IFormSearchMember);
+  const [dataFilter, setDataFilter] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -40,15 +46,23 @@ function TablesUser() {
 
   const fetchData = async () => {
     const list = await listUser();
-    setListMember(list);
-
+    const lstRole = await getLstRole();
     const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
     var decoded = jwt_decode(token);
 
     if (decoded) {
       setAuthor(decoded);
     }
+
+    setRoles(lstRole);
+    setListMember(list);
   };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(dataFilter.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(dataFilter.length / itemsPerPage));
+  }, [dataFilter]);
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
@@ -58,8 +72,15 @@ function TablesUser() {
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
-    setPaginatedItems(listMember.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(listMember.length / itemsPerPage));
+
+    if (formSearch.gender === 0 && formSearch.email === "" && formSearch.roleId === 0) {
+      setPaginatedItems(listMember.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(listMember.length / itemsPerPage));
+      return;
+    }
+
+    setPaginatedItems(dataFilter.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(dataFilter.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, pageFocus]);
 
   const handleChangeItemsPerPage = (e) => {
@@ -89,6 +110,19 @@ function TablesUser() {
     approveRoleUser(idUserApprove);
   };
 
+  const HandleSearch = (formData) => {
+    
+    console.log(formData);
+    const lstFilter = listMember.filter((x) => HandleSearchItemMember(x, formData));
+
+    setDataFilter(lstFilter);
+  };
+
+  const handlerReset = () => {
+    setFormSearch(IFormSearchMember);
+    HandleSearch(IFormSearchMember);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -107,6 +141,8 @@ function TablesUser() {
                   type="text"
                   className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-72 p-2 ml-2 "
                   placeholder="email"
+                  value={formSearch.email}
+                  onChange={(e) => setFormSearch({ ...formSearch, email: e.target.value })}
                 />
               </div>
 
@@ -114,8 +150,14 @@ function TablesUser() {
                 <label className="text-lg mt-1">
                   <small>Gender : </small>
                 </label>
-                <select className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-72 p-2 ml-2 ">
+                <select
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-72 p-2 ml-2 "
+                  value={formSearch.gender}
+                  onChange={(e) => setFormSearch({ ...formSearch, gender: e.target.value })}
+                >
                   <option value={0}> Select Gender</option>
+                  <option value={1}> Male</option>
+                  <option value={2}> Female</option>
                 </select>
               </div>
 
@@ -123,16 +165,32 @@ function TablesUser() {
                 <label className="text-lg mt-1">
                   <small>Role : </small>
                 </label>
-                <select className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 w-72 p-2 ml-2 ">
+                <select
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 w-72 p-2 ml-2 "
+                  value={formSearch.roleId}
+                  onChange={(e) => setFormSearch({ ...formSearch, roleId: e.target.value })}
+                >
                   <option value={""}>Select Role</option>
+                  {roles.length > 0 &&
+                    roles.map((item, index) => (
+                      <option key={index} value={item.roleId}>
+                        {item.roleName}
+                      </option>
+                    ))}
                 </select>
               </div>
 
               <div>
-                <button className="bg-sky-800 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2">
+                <button
+                  className="bg-sky-800 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2"
+                  onClick={() => HandleSearch(formSearch)}
+                >
                   Search
                 </button>
-                <button className="bg-gray-400 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2">
+                <button
+                  className="bg-gray-400 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2"
+                  onClick={handlerReset}
+                >
                   Reset
                 </button>
                 <Link to={"/member/create"}>

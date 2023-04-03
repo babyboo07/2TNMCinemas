@@ -111,7 +111,7 @@ function TablesUser() {
 
   const closeModal = () => {
     setIdUserApprove("");
-    setShowModal(true);
+    setShowModal(false);
     setUpRoleStatus(0);
   };
 

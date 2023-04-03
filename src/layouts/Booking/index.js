@@ -11,9 +11,11 @@ import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import PagingList from "layouts/utils/Pagination";
 import { getUserInfoById } from "API/authentitication/auth";
-import { ADMIN } from "AppConstants";
-import { SUPER_ADMIN } from "AppConstants";
 import { MEMBER } from "AppConstants";
+import { listRoom } from "API/room/room";
+import { listMovies } from "API/movies/movie";
+import { IFormSearchBooking } from "layouts/Init/initForm";
+import { HandleSearchItemBooking } from "layouts/utils/HandleFilter";
 
 export default function TableBookingDepot() {
   const [bookings, setBookings] = useState([]);
@@ -23,6 +25,10 @@ export default function TableBookingDepot() {
   const [itemOffset, setItemOffset] = useState(0);
   const [pageFocus, setPageFocus] = useState(0);
   const [author, setAuthor] = useState({});
+  const [lstRoom, setLstRoom] = useState([]);
+  const [lstMovie, setLstMovie] = useState([]);
+  const [formSearch, setFormSearch] = useState(IFormSearchBooking);
+  const [dataFilter, setDataFilter] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -30,6 +36,8 @@ export default function TableBookingDepot() {
 
   const fetchData = async () => {
     const bookingData = await listMovieBooking();
+    const lstRoom = await listRoom();
+    const lstMovie = await listMovies();
     const token = localStorage.getItem("token") ? localStorage.getItem("token") : "";
     var decoded = jwt_decode(token);
 
@@ -38,9 +46,19 @@ export default function TableBookingDepot() {
       setAuthor(user);
     }
     if (bookingData) {
+      console.log(bookingData);
+
       setBookings(bookingData);
     }
+    setLstRoom(lstRoom);
+    setLstMovie(lstMovie);
   };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setPaginatedItems(dataFilter.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(dataFilter.length / itemsPerPage));
+  }, [dataFilter]);
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
@@ -50,8 +68,23 @@ export default function TableBookingDepot() {
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
-    setPaginatedItems(bookings.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(bookings.length / itemsPerPage));
+
+    if (
+      formSearch.movieId === 0 &&
+      formSearch.showDate === "" &&
+      formSearch.roomId === 0 &&
+      formSearch.status === 0 &&
+      formSearch.name === "" &&
+      formSearch.email === ""
+    ) {
+      setPaginatedItems(bookings.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(bookings.length / itemsPerPage));
+
+      return;
+    }
+
+    setPaginatedItems(dataFilter.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(dataFilter.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, pageFocus]);
 
   const handleChangeItemsPerPage = (e) => {
@@ -71,15 +104,143 @@ export default function TableBookingDepot() {
     approveBooking(id);
   };
 
+  const checkExpiredDateTicket = (dateBooking) => {
+    const dateNow = new Date();
+    const dateOrder = new Date(Date.parse(dateBooking));
+
+    if (dateOrder > dateNow) {
+      return true;
+    }
+
+    return false;
+  };
+  const HandleSearch = (formData) => {
+    console.log(formData);
+    const lstFilter = bookings.filter((x) => HandleSearchItemBooking(x, formData));
+
+    setDataFilter(lstFilter);
+  };
+
+  const handlerReset = () => {
+    setFormSearch(IFormSearchBooking);
+    HandleSearch(IFormSearchBooking);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Card>
+            <SoftTypography variant="h6" mt={3} ml={3}>
+              Booking Table
+            </SoftTypography>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-              <SoftTypography variant="h6">Booking Table</SoftTypography>
+              <div className="flex">
+                <label className="mr-1 text-lg mt-1">
+                  <small>Full Name: </small>
+                </label>
+                <input
+                  type="text"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-42 p-2 "
+                  placeholder="Full Name"
+                  value={formSearch.name}
+                  onChange={(e) => setFormSearch({ ...formSearch, name: e.target.value })}
+                />
+              </div>
+
+              <div className="flex">
+                <label className="mr-1 text-lg mt-1">
+                  <small>Email: </small>
+                </label>
+                <input
+                  type="text"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400 block w-42 p-2 "
+                  placeholder="Email"
+                  value={formSearch.email}
+                  onChange={(e) => setFormSearch({ ...formSearch, email: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="mr-1 text-lg mt-1">
+                  <small>Movie: </small>
+                </label>
+                <select
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-36 p-2 "
+                  value={formSearch.movieId}
+                  onChange={(e) => setFormSearch({ ...formSearch, movieId: e.target.value })}
+                >
+                  <option value={0}>Select Movie</option>
+                  {lstMovie &&
+                    lstMovie.map((movie, index) => (
+                      <option value={movie.id} key={index}>
+                        {movie.titile}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div>
+                <label className="mr-1 text-lg mt-1">
+                  <small>Room: </small>
+                </label>
+                <select
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-36 p-2 "
+                  value={formSearch.roomId}
+                  onChange={(e) => setFormSearch({ ...formSearch, roomId: e.target.value })}
+                >
+                  <option value={0}> Select Room</option>
+                  {lstRoom &&
+                    lstRoom.map((room, index) => (
+                      <option value={room.roomId} key={index}>
+                        {room.roomName}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div>
+                <label className="mr-1 text-lg mt-1">
+                  <small>Show Date: </small>
+                </label>
+                <input
+                  type="date"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-36 p-2 "
+                  value={formSearch.showDate}
+                  onChange={(e) => setFormSearch({ ...formSearch, showDate: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label className="mr-1 text-lg mt-1">
+                  <small>Status: </small>
+                </label>
+                <select
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-400  w-36 p-2 "
+                  value={formSearch.status}
+                  onChange={(e) => setFormSearch({ ...formSearch, status: Number(e.target.value) })}
+                >
+                  <option value={0}>Select status</option>
+                  <option value={1}>In Progress</option>
+                  <option value={2}>Approve</option>
+                  <option value={3}>Expired</option>
+                </select>
+              </div>
+
+              <div>
+                <button
+                  className="bg-sky-800 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2"
+                  onClick={() => HandleSearch(formSearch)}
+                >
+                  Search
+                </button>
+                <button
+                  className="bg-gray-400 text-white rounded-lg text-sm w-20 h-10 focus:ring-blue-400 focus:border-blue-400 mr-2"
+                  onClick={handlerReset}
+                >
+                  Reset
+                </button>
+              </div>
             </SoftBox>
+
             <SoftBox
               sx={{
                 "& .MuiTableRow-root:not(:last-child)": {
@@ -127,7 +288,15 @@ export default function TableBookingDepot() {
                     {paginatedItems.length > 0 &&
                       paginatedItems.map((c) => (
                         <tr key={c.bookingId} className="bg-white border-b hover:bg-gray-50">
-                          <td className="px-6 py-4">{c.email}</td>
+                          <th
+                            scope="row"
+                            className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
+                          >
+                            <div className="pl-3">
+                              <div className="text-base font-semibold">{c.userFullName}</div>
+                              <div className="font-normal text-gray-500">{c.email}</div>
+                            </div>
+                          </th>
                           <td className="px-6 py-4">{c.movieName}</td>
                           <td className="px-6 py-4">{c.roomName}</td>
                           <td className="px-6 py-4">{c.seatName}</td>
@@ -136,13 +305,20 @@ export default function TableBookingDepot() {
                           <td className="px-6 py-4">{c.showTime}</td>
                           <td className="px-6 py-4">
                             {c.status === 1 ? (
-                              <span className="text-green-500">In Process</span>
+                              <div>
+                                {checkExpiredDateTicket(c.showDate + " " + c.showTime + ":00") ? (
+                                  <span className="text-green-500"> In Process</span>
+                                ) : (
+                                  <span className="text-red-500">Expired</span>
+                                )}
+                              </div>
                             ) : (
                               <span className="text-red-300">Approve</span>
                             )}
                           </td>
                           {c.status !== 2 &&
-                            (author.roles[0].roleId !== MEMBER ) && (
+                            author.roles[0].roleId !== MEMBER &&
+                            checkExpiredDateTicket(c.showDate + " " + c.showTime + ":00") && (
                               <td className="px-6 py-4">
                                 <div className="flex items-center">
                                   <div

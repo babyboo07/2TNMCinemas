@@ -2,9 +2,10 @@ import { Card } from "@mui/material";
 import { getDirectorbyId } from "API/director/director";
 import { URL_IMG } from "AppConstants";
 import SoftBox from "components/SoftBox";
+import SoftButton from "components/SoftButton";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 const { default: Footer } = require("examples/Footer");
 const { default: DashboardLayout } = require("examples/LayoutContainers/DashboardLayout");
 const { default: DashboardNavbar } = require("examples/Navbars/DashboardNavbar");
@@ -48,6 +49,11 @@ export default function DetailDirector() {
                 </div>
               </div>
             </SoftBox>
+            <Link to="/director" className="ml-4 pb-4">
+              <SoftButton variant="gradient" color="secondary">
+                Back to List
+              </SoftButton>
+            </Link>
           </Card>
         </SoftBox>
       </SoftBox>

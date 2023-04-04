@@ -74,14 +74,25 @@ const DetailMovie = () => {
                     </div>
                     <div className="flex pt-3">
                       <span className="pr-3 text-base font-medium">Hot:</span>
-                      <div
+                      {movieInfo?.startNumber !== 1 ? (
+                        <div
                         data-te-chip-init
                         data-te-ripple-init
-                        className="[word-wrap: break-word] mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-red-500 py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"
+                        className="[word-wrap: break-word] mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-[#eceff1] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"
                         data-te-close="true"
                       >
-                        Text
+                        Normal
                       </div>
+                      ) : (
+                        <div
+                          data-te-chip-init
+                          data-te-ripple-init
+                          className="[word-wrap: break-word] mr-4 flex h-[26px] cursor-pointer items-center justify-between rounded-[16px] bg-red-500 py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none active:bg-[#cacfd1]"
+                          data-te-close="true"
+                        >
+                          Hot
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex pt-3">
